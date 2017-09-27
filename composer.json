@@ -1,0 +1,13 @@
+{
+    "name": "elsevier-io/json-schema-php-generator",
+    "description": "Lib to generate a PHP representation of the data structures in a JSON Schema",
+    "type": "library",
+    "license": "Apache",
+    "authors": [
+        {
+            "name": "Andy Clyde",
+            "email": "a.clyde@elsevier.com"
+        }
+    ],
+    "require": {}
+}
