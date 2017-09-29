@@ -6,24 +6,18 @@ use Elsevier\JSONSchemaPHPGenerator\Generator;
 use Elsevier\JSONSchemaPHPGenerator\InvalidSchemaException;
 use Hamcrest\MatcherAssert as h;
 use Hamcrest\Matchers as m;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
 
 class GeneratorTest extends \PHPUnit\Framework\TestCase
 {
-    public function testCreatesOutputDirIfNonExistent() {
-        $outputDir = '/tmp/outputDir';
-        $generator = new Generator($outputDir);
-
-        h::assertThat(dir($outputDir), m::anInstanceOf(\Directory::class));
-    }
-
     public function testEmptySchemaCreatesNoFiles() {
-        $outputDir = '/tmp/outputDir';
-        $generator = new Generator($outputDir);
+        $fileSystem = $this->createFilesystem();
+        $generator = new Generator($fileSystem);
 
         $generator->generate('{}');
 
-        $actualOutputDir = new \FilesystemIterator($outputDir);
-        h::assertThat($actualOutputDir, m::emptyTraversable());
+        h::assertThat($fileSystem->listContents(), m::is([]));
     }
 
     public function testBasicSchemaCreatesOneClassFile() {
@@ -35,32 +29,39 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
                 }
             }
         }}';
-        $outputDir = '/tmp/outputDir';
-        $generator = new Generator($outputDir);
+        $fileSystem = $this->createFilesystem();
+        $generator = new Generator($fileSystem);
 
         $generator->generate($schema);
 
-        h::assertThat(is_file($outputDir . DIRECTORY_SEPARATOR . 'FooBar.php'), m::is(true));
+        h::assertThat($fileSystem->has('FooBar.php'), m::is(true));
     }
 
     public function testInvalidSchemaThrowsException() {
         $schema = '{';
-        $outputDir = '/tmp/outputDir';
-        $generator = new Generator($outputDir);
+        $generator = new Generator($this->createFilesystem());
 
         $this->setExpectedException(InvalidSchemaException::class);
         $generator->generate($schema);
     }
 
     /**
+     * @return Filesystem
+     */
+    public function createFilesystem() {
+        $outputDir = '/tmp/outputDir/';
+        $localFiles = new Local($outputDir);
+        return new Filesystem($localFiles);
+    }
+
+    /**
      * @after
      */
     public function cleanOutOutputDir() {
-        $outputDir = '/tmp/outputDir';
-        $generatedFile = $outputDir . DIRECTORY_SEPARATOR . 'FooBar.php';
-        if (is_file($generatedFile)) {
-            unlink($generatedFile);
+        $fileSystem = $this->createFilesystem();
+        $files = $fileSystem->listContents();
+        foreach ($files as $file) {
+            $fileSystem->delete($file['path']);
         }
-        rmdir($outputDir);
     }
 }

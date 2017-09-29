@@ -2,23 +2,21 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator;
 
+use League\Flysystem\Filesystem;
+
 class Generator
 {
     /**
-     * @var string
+     * @var Filesystem
      */
     private $outputDir;
 
     /**
-     * Generator constructor.
-     * @param string $outputDir
+     * @param Filesystem $outputDir
      */
-    public function __construct($outputDir)
+    public function __construct(Filesystem $outputDir)
     {
         $this->outputDir = $outputDir;
-        if (!is_dir($this->outputDir)) {
-            mkdir($this->outputDir, 0777, true);
-        }
     }
 
     /**
@@ -34,7 +32,7 @@ class Generator
             return;
         }
         foreach ($schema->definitions as $name => $definition) {
-            touch($this->outputDir . DIRECTORY_SEPARATOR . $name . '.php');
+            $this->outputDir->write($name . '.php', '');
         }
     }
 }
