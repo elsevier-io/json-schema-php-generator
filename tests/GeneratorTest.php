@@ -45,12 +45,31 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         $generator->generate($schema);
     }
 
+    public function testCreatesClassWithSingleIntegerProperty() {
+        $schema = '{"definitions": {
+            "FooBar": {
+                "properties": {
+                    "foo": {"type": "integer"}
+                }
+            }
+        }}';
+        $fileSystem = $this->createFilesystem();
+        $generator = new Generator($fileSystem);
+        $examples = $this->createFilesystem(__DIR__ . '/examples/');
+
+        $generator->generate($schema);
+
+        $actual = preg_replace('/\s+/', '', $fileSystem->read('FooBar.php'));
+        $expected = preg_replace('/\s+/', '', $examples->read('FooBar.php'));
+        h::assertThat($actual, m::is(m::equalTo($expected)));
+    }
+
     /**
+     * @param string $rootDir
      * @return Filesystem
      */
-    public function createFilesystem() {
-        $outputDir = '/tmp/outputDir/';
-        $localFiles = new Local($outputDir);
+    public function createFilesystem($rootDir = '/tmp/outputDir/') {
+        $localFiles = new Local($rootDir);
         return new Filesystem($localFiles);
     }
 

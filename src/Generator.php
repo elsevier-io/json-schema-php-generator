@@ -3,6 +3,7 @@
 namespace Elsevier\JSONSchemaPHPGenerator;
 
 use League\Flysystem\Filesystem;
+use Nette\PhpGenerator\PhpNamespace;
 
 class Generator
 {
@@ -32,7 +33,28 @@ class Generator
             return;
         }
         foreach ($schema->definitions as $name => $definition) {
-            $this->outputDir->write($name . '.php', '');
+            $namespace = new PhpNamespace('Elsevier\JSONSchemaPHPGenerator\Examples');
+            $class = $namespace->addClass($name);
+            $class->addImplement('\JsonSerializable');
+            $constructor = $class->addMethod('__construct');
+            $constructorComment = '';
+            $constructorBody = '';
+            $serializableArrayBody = '';
+            foreach ($definition->properties as $propertyName => $propertyAttributes) {
+                $class->addProperty($propertyName)
+                    ->setVisibility('private')
+                    ->addComment('@var int');
+                $constructor->addParameter($propertyName);
+                $constructorComment.= "@param int \$$propertyName";
+                $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
+                $serializableArrayBody.= "'" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
+            }
+            $constructor->addComment($constructorComment)
+                ->addBody($constructorBody);
+            $serializableArray = 'return [' . $serializableArrayBody . '];';
+            $class->addMethod('jsonSerialize')
+                ->addBody($serializableArray);
+            $this->outputDir->write($name . '.php', "<?php\n\n" . $namespace);
         }
     }
 }
