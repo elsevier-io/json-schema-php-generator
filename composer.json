@@ -2,7 +2,7 @@
     "name": "elsevier-io/json-schema-php-generator",
     "description": "Lib to generate a PHP representation of the data structures in a JSON Schema",
     "type": "library",
-    "license": "Apache",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Andy Clyde",
