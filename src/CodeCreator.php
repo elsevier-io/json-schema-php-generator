@@ -38,7 +38,16 @@ class CodeCreator
             $serializableArrayBody = '';
             foreach ($definition->properties as $propertyName => $propertyAttributes) {
                 $jsonPropertyType = isset($propertyAttributes->type) ? $propertyAttributes->type : 'number';
-                $propertyType = $jsonPropertyType === 'number' ? 'integer' : 'string';
+                switch ($jsonPropertyType) {
+                    case 'number':
+                        $propertyType = 'integer';
+                        break;
+                    case 'boolean':
+                    case 'string':
+                    default:
+                        $propertyType = $jsonPropertyType;
+                        break;
+                }
                 $class->addProperty($propertyName)
                     ->setVisibility('private')
                     ->addComment("@var $propertyType");
