@@ -37,11 +37,12 @@ class CodeCreator
             $constructorBody = '';
             $serializableArrayBody = '';
             foreach ($definition->properties as $propertyName => $propertyAttributes) {
+                $propertyType = isset($propertyAttributes->type) ? $propertyAttributes->type : 'int';
                 $class->addProperty($propertyName)
                     ->setVisibility('private')
-                    ->addComment('@var int');
+                    ->addComment("@var $propertyType");
                 $constructor->addParameter($propertyName);
-                $constructorComment.= "@param int \$$propertyName";
+                $constructorComment.= "@param $propertyType \$$propertyName";
                 $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
                 $serializableArrayBody.= "'" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
             }

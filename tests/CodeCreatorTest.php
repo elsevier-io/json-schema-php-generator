@@ -26,6 +26,25 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $expected = $this->getExample('SingleIntegerProperty.php');
         assertThat($this->removeWhiteSpace($code['SingleIntegerProperty']), is(equalTo($expected)));
     }
+    
+    public function testCreatesClassWithSingleStringProperty()
+    {
+        $schema = json_decode('{"definitions": {
+            "SingleStringProperty": {
+                "properties": {
+                    "foo": {"type": "string"}
+                }
+            }
+        }}');
+        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(1));
+        assertThat($code, hasKey('SingleStringProperty'));
+        $expected = $this->getExample('SingleStringProperty.php');
+        assertThat($this->removeWhiteSpace($code['SingleStringProperty']), is(equalTo($expected)));
+    }
 
     /**
      * @param string $exampleName
