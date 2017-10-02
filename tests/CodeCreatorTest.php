@@ -3,8 +3,6 @@
 namespace Elsevier\JSONSchemaPHPGenerator\Tests;
 
 use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
-use Hamcrest\MatcherAssert as h;
-use Hamcrest\Matchers as m;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
@@ -23,10 +21,10 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 
         $code = $codeCreator->create($schema);
 
-        h::assertThat($code, m::arrayWithSize(1));
-        h::assertThat($code, m::hasKey('FooBar'));
+        assertThat($code, arrayWithSize(1));
+        assertThat($code, hasKey('FooBar'));
         $expected = $this->getExample('FooBar.php');
-        h::assertThat($this->removeWhiteSpace($code['FooBar']), m::is(m::equalTo($expected)));
+        assertThat($this->removeWhiteSpace($code['FooBar']), is(equalTo($expected)));
     }
 
     /**

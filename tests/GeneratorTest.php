@@ -6,8 +6,6 @@ use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 use Elsevier\JSONSchemaPHPGenerator\Generator;
 use Elsevier\JSONSchemaPHPGenerator\InvalidJsonException;
 use Elsevier\JSONSchemaPHPGenerator\InvalidSchemaException;
-use Hamcrest\MatcherAssert as h;
-use Hamcrest\Matchers as m;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
@@ -20,7 +18,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
 
         $generator->generate('{}');
 
-        h::assertThat($fileSystem->listContents(), m::is([]));
+        assertThat($fileSystem->listContents(), is([]));
     }
 
     public function testBasicSchemaCreatesOneClassFile() {
@@ -38,7 +36,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
 
         $generator->generate($schema);
 
-        h::assertThat($fileSystem->has('FooBar.php'), m::is(true));
+        assertThat($fileSystem->has('FooBar.php'), is(true));
     }
 
     public function testInvalidJsonThrowsException() {
