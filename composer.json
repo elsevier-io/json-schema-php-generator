@@ -25,7 +25,8 @@
         "php" : "^5.5 || ^7.0",
         "league/flysystem": "^1.0",
         "nette/php-generator": "2.3.*",
-        "nette/utils": "2.3.*"
+        "nette/utils": "2.3.*",
+        "justinrainbow/json-schema": "^5.2"
     },
     "require-dev": {
         "json-schema/JSON-Schema-Test-Suite": "1.2.0",

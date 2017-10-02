@@ -3,6 +3,7 @@
 namespace Elsevier\JSONSchemaPHPGenerator\Tests;
 
 use Elsevier\JSONSchemaPHPGenerator\Generator;
+use Elsevier\JSONSchemaPHPGenerator\InvalidJsonException;
 use Elsevier\JSONSchemaPHPGenerator\InvalidSchemaException;
 use Hamcrest\MatcherAssert as h;
 use Hamcrest\Matchers as m;
@@ -37,8 +38,18 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         h::assertThat($fileSystem->has('FooBar.php'), m::is(true));
     }
 
-    public function testInvalidSchemaThrowsException() {
+    public function testInvalidJsonThrowsException() {
         $schema = '{';
+        $generator = new Generator($this->createFilesystem());
+
+        $this->setExpectedException(InvalidJsonException::class);
+        $generator->generate($schema);
+    }
+
+    public function testInvalidJsonSchemaThrowsException() {
+        $schema = '{"definitions": {
+            "Baz": "invalid"
+        }}';
         $generator = new Generator($this->createFilesystem());
 
         $this->setExpectedException(InvalidSchemaException::class);

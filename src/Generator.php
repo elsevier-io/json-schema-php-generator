@@ -4,6 +4,7 @@ namespace Elsevier\JSONSchemaPHPGenerator;
 
 use League\Flysystem\Filesystem;
 use Nette\PhpGenerator\PhpNamespace;
+use JsonSchema\Validator;
 
 class Generator
 {
@@ -22,11 +23,19 @@ class Generator
 
     /**
      * @param $rawSchema
+     * @throws InvalidJsonException
      * @throws InvalidSchemaException
      */
     public function generate($rawSchema) {
         $schema = json_decode($rawSchema);
         if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new InvalidJsonException('JSON Schema is invalid JSON.');
+        }
+        $validator = new Validator();
+        $schemaDraft4 = __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json';
+        $validator->validate($schema, (object)['$ref' => 'file://' . realpath($schemaDraft4)]);
+
+        if (!$validator->isValid()) {
             throw new InvalidSchemaException('JSON Schema is invalid JSON.');
         }
         if (!isset($schema->definitions)) {
