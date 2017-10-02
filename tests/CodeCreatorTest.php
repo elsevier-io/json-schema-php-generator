@@ -8,10 +8,10 @@ use League\Flysystem\Filesystem;
 
 class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 {
-    public function testCreatesClassWithSingleIntegerProperty()
+    public function testCreatesClassWithIntegerProperty()
     {
         $schema = json_decode('{"definitions": {
-            "SingleIntegerProperty": {
+            "IntegerProperty": {
                 "properties": {
                     "foo": {"type": "number"}
                 }
@@ -22,15 +22,15 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(1));
-        assertThat($code, hasKey('SingleIntegerProperty'));
-        $expected = $this->getExample('SingleIntegerProperty.php');
-        assertThat($this->removeWhiteSpace($code['SingleIntegerProperty']), is(equalTo($expected)));
+        assertThat($code, hasKey('IntegerProperty'));
+        $expected = $this->getExample('IntegerProperty.php');
+        assertThat($this->removeWhiteSpace($code['IntegerProperty']), is(equalTo($expected)));
     }
     
-    public function testCreatesClassWithSingleStringProperty()
+    public function testCreatesClassWithStringProperty()
     {
         $schema = json_decode('{"definitions": {
-            "SingleStringProperty": {
+            "StringProperty": {
                 "properties": {
                     "foo": {"type": "string"}
                 }
@@ -41,15 +41,15 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(1));
-        assertThat($code, hasKey('SingleStringProperty'));
-        $expected = $this->getExample('SingleStringProperty.php');
-        assertThat($this->removeWhiteSpace($code['SingleStringProperty']), is(equalTo($expected)));
+        assertThat($code, hasKey('StringProperty'));
+        $expected = $this->getExample('StringProperty.php');
+        assertThat($this->removeWhiteSpace($code['StringProperty']), is(equalTo($expected)));
     }
     
-    public function testCreatesClassWithSingleBooleanProperty()
+    public function testCreatesClassWithBooleanProperty()
     {
         $schema = json_decode('{"definitions": {
-            "SingleBooleanProperty": {
+            "BooleanProperty": {
                 "properties": {
                     "foo": {"type": "boolean"}
                 }
@@ -60,15 +60,15 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(1));
-        assertThat($code, hasKey('SingleBooleanProperty'));
-        $expected = $this->getExample('SingleBooleanProperty.php');
-        assertThat($this->removeWhiteSpace($code['SingleBooleanProperty']), is(equalTo($expected)));
+        assertThat($code, hasKey('BooleanProperty'));
+        $expected = $this->getExample('BooleanProperty.php');
+        assertThat($this->removeWhiteSpace($code['BooleanProperty']), is(equalTo($expected)));
     }
 
-    public function testCreatesClassWithSingleValueEnumPropertyAsConstant()
+    public function testCreatesClassWithEnumPropertyWithSingleValueAsConstant()
     {
         $schema = json_decode('{"definitions": {
-            "SingleValueEnumProperty": {
+            "EnumPropertyWithSingleValue": {
                 "properties": {
                     "foo": {
                         "enum": [
@@ -84,9 +84,9 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(1));
-        assertThat($code, hasKey('SingleValueEnumProperty'));
-        $expected = $this->getExample('SingleValueEnumProperty.php');
-        assertThat($this->removeWhiteSpace($code['SingleValueEnumProperty']), is(equalTo($expected)));
+        assertThat($code, hasKey('EnumPropertyWithSingleValue'));
+        $expected = $this->getExample('EnumPropertyWithSingleValue.php');
+        assertThat($this->removeWhiteSpace($code['EnumPropertyWithSingleValue']), is(equalTo($expected)));
     }
 
     /**

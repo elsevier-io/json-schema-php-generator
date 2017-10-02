@@ -2,13 +2,13 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
-class SingleBooleanProperty implements \JsonSerializable
+class StringProperty implements \JsonSerializable
 {
-    /** @var boolean */
+    /** @var string */
     private $foo;
 
     /**
-     * @param boolean $foo
+     * @param string $foo
      */
     public function __construct($foo)
     {

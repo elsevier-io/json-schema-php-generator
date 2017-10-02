@@ -2,17 +2,17 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
-class SingleValueEnumProperty implements \JsonSerializable
+class IntegerProperty implements \JsonSerializable
 {
-    /** @var string */
+    /** @var integer */
     private $foo;
 
     /**
-     *
+     * @param integer $foo
      */
-    public function __construct()
+    public function __construct($foo)
     {
-        $this->foo = 'Bar';
+        $this->foo = $foo;
     }
 
     public function jsonSerialize() {
