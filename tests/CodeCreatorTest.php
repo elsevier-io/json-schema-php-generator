@@ -11,7 +11,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
     public function testCreatesClassWithSingleIntegerProperty()
     {
         $schema = json_decode('{"definitions": {
-            "FooBar": {
+            "SingleIntegerProperty": {
                 "properties": {
                     "foo": {"type": "integer"}
                 }
@@ -22,9 +22,9 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(1));
-        assertThat($code, hasKey('FooBar'));
-        $expected = $this->getExample('FooBar.php');
-        assertThat($this->removeWhiteSpace($code['FooBar']), is(equalTo($expected)));
+        assertThat($code, hasKey('SingleIntegerProperty'));
+        $expected = $this->getExample('SingleIntegerProperty.php');
+        assertThat($this->removeWhiteSpace($code['SingleIntegerProperty']), is(equalTo($expected)));
     }
 
     /**

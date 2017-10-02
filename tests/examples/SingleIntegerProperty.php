@@ -2,7 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
-class FooBar implements \JsonSerializable
+class SingleIntegerProperty implements \JsonSerializable
 {
     /** @var int */
     private $foo;
