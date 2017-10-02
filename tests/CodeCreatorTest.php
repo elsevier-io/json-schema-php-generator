@@ -19,7 +19,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 }
             }
         }}');
-        $codeCreator = new CodeCreator();
+        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 

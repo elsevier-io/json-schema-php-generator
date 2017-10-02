@@ -19,10 +19,10 @@ class Generator
     /**
      * @param Filesystem $outputDir
      */
-    public function __construct(Filesystem $outputDir)
+    public function __construct(Filesystem $outputDir, CodeCreator $codeCreator)
     {
         $this->outputDir = $outputDir;
-        $this->codeCreator = new CodeCreator();
+        $this->codeCreator = $codeCreator;
     }
 
     /**

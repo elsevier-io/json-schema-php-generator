@@ -7,6 +7,19 @@ use Nette\PhpGenerator\PhpNamespace;
 class CodeCreator
 {
     /**
+     * @var string
+     */
+    private $defaultNamespace;
+
+    /**
+     * @param string $defaultNamespace
+     */
+    public function __construct($defaultNamespace)
+    {
+        $this->defaultNamespace = $defaultNamespace;
+    }
+
+    /**
      * @param string $schema - A valid JSON Schema
      * @return PhpNamespace[]
      */
@@ -16,7 +29,7 @@ class CodeCreator
         }
         $classes = [];
         foreach ($schema->definitions as $name => $definition) {
-            $namespace = new PhpNamespace('Elsevier\JSONSchemaPHPGenerator\Examples');
+            $namespace = new PhpNamespace($this->defaultNamespace);
             $class = $namespace->addClass($name);
             $class->addImplement('\JsonSerializable');
             $constructor = $class->addMethod('__construct');
