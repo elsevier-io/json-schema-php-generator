@@ -13,7 +13,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $schema = json_decode('{"definitions": {
             "SingleIntegerProperty": {
                 "properties": {
-                    "foo": {"type": "integer"}
+                    "foo": {"type": "number"}
                 }
             }
         }}');
