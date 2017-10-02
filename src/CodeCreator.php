@@ -51,9 +51,13 @@ class CodeCreator
                 $class->addProperty($propertyName)
                     ->setVisibility('private')
                     ->addComment("@var $propertyType");
-                $constructor->addParameter($propertyName);
-                $constructorComment.= "@param $propertyType \$$propertyName";
-                $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
+                if (!isset($propertyAttributes->enum) || count($propertyAttributes->enum) > 1) {
+                    $constructor->addParameter($propertyName);
+                    $constructorComment.= "@param $propertyType \$$propertyName";
+                    $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
+                } else {
+                    $constructorBody.= '$this->' . $propertyName . " = '" . $propertyAttributes->enum[0] . "';\n";
+                }
                 $serializableArrayBody.= "'" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
             }
             $constructor->addComment($constructorComment)

@@ -65,6 +65,30 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($this->removeWhiteSpace($code['SingleBooleanProperty']), is(equalTo($expected)));
     }
 
+    public function testCreatesClassWithSingleValueEnumPropertyAsConstant()
+    {
+        $schema = json_decode('{"definitions": {
+            "SingleValueEnumProperty": {
+                "properties": {
+                    "foo": {
+                        "enum": [
+                            "Bar"
+                        ],
+                        "type": "string"
+                    }
+                }
+            }
+        }}');
+        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(1));
+        assertThat($code, hasKey('SingleValueEnumProperty'));
+        $expected = $this->getExample('SingleValueEnumProperty.php');
+        assertThat($this->removeWhiteSpace($code['SingleValueEnumProperty']), is(equalTo($expected)));
+    }
+
     /**
      * @param string $exampleName
      * @return string
