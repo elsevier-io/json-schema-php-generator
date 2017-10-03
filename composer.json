@@ -45,5 +45,8 @@
     },
     "scripts": {
         "test" : "vendor/bin/phpunit"
-    }
+    },
+    "bin": [
+        "bin/php-json-schema-generate"
+    ]
 }

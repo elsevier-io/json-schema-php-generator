@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php
+
+if (is_file(__DIR__.'/../autoload.php') === true) {
+    include_once __DIR__.'/../autoload.php';
+} elseif (is_file(__DIR__.'/../vendor/autoload.php') === true) {
+    include_once __DIR__.'/../vendor/autoload.php';
+} else {
+    throw new Exception('Cannot find autoloader');
+}
+
+use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
+use Elsevier\JSONSchemaPHPGenerator\Generator;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
+
+$localFiles = new Local(__DIR__ . '/outputDir/');
+$outputDir = new Filesystem($localFiles);
+$codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+$generator = new Generator($outputDir, $codeCreator);
+$jsonSchema = '{"definitions": {
+            "EnumProperty": {
+                "properties": {
+                    "foo": {
+                        "enum": [
+                            "Foo",
+                            "Bar"
+                        ],
+                        "type": "string"
+                    }
+                }
+            }
+        }}';
+$generator->generate($jsonSchema);
+exit(0);
