@@ -3,7 +3,6 @@
 namespace Elsevier\JSONSchemaPHPGenerator;
 
 use League\Flysystem\Filesystem;
-use Nette\PhpGenerator\PhpNamespace;
 use JsonSchema\Validator;
 
 class Generator
@@ -12,13 +11,19 @@ class Generator
      * @var Filesystem
      */
     private $outputDir;
+    /**
+     * @var CodeCreator
+     */
+    private $codeCreator;
 
     /**
      * @param Filesystem $outputDir
+     * @param CodeCreator $codeCreator
      */
-    public function __construct(Filesystem $outputDir)
+    public function __construct(Filesystem $outputDir, CodeCreator $codeCreator)
     {
         $this->outputDir = $outputDir;
+        $this->codeCreator = $codeCreator;
     }
 
     /**
@@ -38,32 +43,9 @@ class Generator
         if (!$validator->isValid()) {
             throw new InvalidSchemaException('JSON Schema is invalid JSON.');
         }
-        if (!isset($schema->definitions)) {
-            return;
-        }
-        foreach ($schema->definitions as $name => $definition) {
-            $namespace = new PhpNamespace('Elsevier\JSONSchemaPHPGenerator\Examples');
-            $class = $namespace->addClass($name);
-            $class->addImplement('\JsonSerializable');
-            $constructor = $class->addMethod('__construct');
-            $constructorComment = '';
-            $constructorBody = '';
-            $serializableArrayBody = '';
-            foreach ($definition->properties as $propertyName => $propertyAttributes) {
-                $class->addProperty($propertyName)
-                    ->setVisibility('private')
-                    ->addComment('@var int');
-                $constructor->addParameter($propertyName);
-                $constructorComment.= "@param int \$$propertyName";
-                $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
-                $serializableArrayBody.= "'" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
-            }
-            $constructor->addComment($constructorComment)
-                ->addBody($constructorBody);
-            $serializableArray = 'return [' . $serializableArrayBody . '];';
-            $class->addMethod('jsonSerialize')
-                ->addBody($serializableArray);
-            $this->outputDir->write($name . '.php', "<?php\n\n" . $namespace);
+        $classes = $this->codeCreator->create($schema);
+        foreach ($classes as $className => $class) {
+            $this->outputDir->write($className . '.php', "<?php\n\n" . $class);
         }
     }
 }

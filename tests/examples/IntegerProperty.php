@@ -2,13 +2,13 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
-class FooBar implements \JsonSerializable
+class IntegerProperty implements \JsonSerializable
 {
-    /** @var int */
+    /** @var integer */
     private $foo;
 
     /**
-     * @param int $foo
+     * @param integer $foo
      */
     public function __construct($foo)
     {
