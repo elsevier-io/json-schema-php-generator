@@ -80,9 +80,14 @@ class CodeCreator
         return $classes;
     }
 
-    private function createEnum($name, $values) {
+    /**
+     * @param string $className
+     * @param array $values
+     * @return PhpNamespace
+     */
+    private function createEnum($className, $values) {
         $namespace = new PhpNamespace($this->defaultNamespace);
-        $class = $namespace->addClass($name);
+        $class = $namespace->addClass($className);
         foreach ($values as $value) {
             $class->addConst(ucfirst($value), $value);
         }
@@ -108,6 +113,10 @@ class CodeCreator
         return $namespace;
     }
 
+    /**
+     * @param string $className
+     * @return PhpNamespace
+     */
     private function createException($className) {
         $namespace = new PhpNamespace($this->defaultNamespace);
         $namespace->addClass($className)

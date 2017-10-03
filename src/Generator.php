@@ -18,6 +18,7 @@ class Generator
 
     /**
      * @param Filesystem $outputDir
+     * @param CodeCreator $codeCreator
      */
     public function __construct(Filesystem $outputDir, CodeCreator $codeCreator)
     {
