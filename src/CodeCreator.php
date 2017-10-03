@@ -52,7 +52,7 @@ class CodeCreator
                     if (count($propertyAttributes->enum) > 1) {
                         $propertyType = $name . ucfirst($propertyName);
                         $classes[$propertyType] = $this->createEnum($propertyType, $propertyAttributes->enum);
-                        $classes['InvalidValueException'] = 'InvalidValueException';
+                        $classes['InvalidValueException'] = $this->createException('InvalidValueException');
                         $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . '->getValue();' . "\n";
                         $constructor->addParameter($propertyName)
                             ->setTypeHint($this->defaultNamespace . '\\' . $propertyType);
@@ -105,6 +105,13 @@ class CodeCreator
         $constructor->addBody($constructorBody);
         $class->addMethod('getValue')
             ->addBody(' return $this->value;');
+        return $namespace;
+    }
+
+    private function createException($className) {
+        $namespace = new PhpNamespace($this->defaultNamespace);
+        $namespace->addClass($className)
+            ->addExtend('\Exception');
         return $namespace;
     }
 }

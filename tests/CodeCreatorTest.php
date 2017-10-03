@@ -110,14 +110,10 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 
         assertThat($code, arrayWithSize(3));
         assertThat($code, hasKey('EnumProperty'));
+        assertThat($code, hasKey('EnumPropertyFoo'));
+        assertThat($code, hasKey('InvalidValueException'));
         $expected = $this->getExample('EnumProperty.php');
         assertThat($this->removeWhiteSpace($code['EnumProperty']), is(equalTo($expected)));
-//        assertThat($code, hasKey('EnumPropertyFoo'));
-//        $expected = $this->getExample('EnumPropertyFoo.php');
-//        assertThat($this->removeWhiteSpace($code['EnumPropertyFoo']), is(equalTo($expected)));
-//        assertThat($code, hasKey('InvalidValueException'));
-//        $expected = $this->getExample('InvalidValueException.php');
-//        assertThat($this->removeWhiteSpace($code['InvalidValueException']), is(equalTo($expected)));
     }
 
     public function testWithEnumPropertyCreatesEnumClass()
@@ -143,6 +139,31 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasKey('EnumPropertyFoo'));
         $expected = $this->getExample('EnumPropertyFoo.php');
         assertThat($this->removeWhiteSpace($code['EnumPropertyFoo']), is(equalTo($expected)));
+    }
+
+    public function testWithEnumPropertyCreatesExceptionUsedByEnum()
+    {
+        $schema = json_decode('{"definitions": {
+            "EnumProperty": {
+                "properties": {
+                    "foo": {
+                        "enum": [
+                            "Foo",
+                            "Bar"
+                        ],
+                        "type": "string"
+                    }
+                }
+            }
+        }}');
+        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(3));
+        assertThat($code, hasKey('InvalidValueException'));
+        $expected = $this->getExample('InvalidValueException.php');
+        assertThat($this->removeWhiteSpace($code['InvalidValueException']), is(equalTo($expected)));
     }
 
     /**
