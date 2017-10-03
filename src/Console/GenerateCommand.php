@@ -32,14 +32,29 @@ class GenerateCommand extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $outputDir = $input->getOption('outputDir');
-        $outputDirFiles = new Local($outputDir);
+        $outputDirPath = $input->getOption('outputDir');
+        $output->writeln('Setting output dir to ' . realpath($outputDirPath));
+        $outputDirFiles = new Local($outputDirPath);
         $outputDir = new Filesystem($outputDirFiles);
-        $codeCreator = new CodeCreator($input->getArgument('class'), $input->getArgument('namespace'));
+
+        $output->writeln('Deleting all files in output dir.');
+        $files = $outputDir->listContents();
+        foreach ($files as $file) {
+            $outputDir->delete($file['path']);
+        }
+
+        $defaultClass = $input->getArgument('class');
+        $defaultNamespace = $input->getArgument('namespace');
+        $output->writeln('Generating code in namespace ' . $defaultNamespace);
+        $output->writeln('    with top-level class ' . $defaultClass);
+        $codeCreator = new CodeCreator($defaultClass, $defaultNamespace);
         $generator = new Generator($outputDir, $codeCreator);
         $localFiles = new Local('.');
         $schemaDir = new Filesystem($localFiles);
-        $jsonSchema = $schemaDir->read($input->getArgument('schema'));
+
+        $schemaPath = $input->getArgument('schema');
+        $output->writeln('Using JSON Schema in '. realpath($schemaPath));
+        $jsonSchema = $schemaDir->read($schemaPath);
         $generator->generate($jsonSchema);
     }
 }
