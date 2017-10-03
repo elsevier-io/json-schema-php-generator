@@ -48,16 +48,26 @@ class CodeCreator
                         $propertyType = $jsonPropertyType;
                         break;
                 }
+                if (isset($propertyAttributes->enum)) {
+                    if (count($propertyAttributes->enum) > 1) {
+                        $propertyType = $name . ucfirst($propertyName);
+                        $classes[$propertyType] = $propertyType;
+                        $classes['InvalidValueException'] = 'InvalidValueException';
+                        $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . '->getValue();' . "\n";
+                        $constructor->addParameter($propertyName)
+                            ->setTypeHint($this->defaultNamespace . '\\' . $propertyType);
+                        $constructorComment.= "@param $propertyType \$$propertyName";
+                    } else {
+                        $constructorBody.= '$this->' . $propertyName . " = '" . $propertyAttributes->enum[0] . "';\n";
+                    }
+                } else {
+                    $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
+                    $constructor->addParameter($propertyName);
+                    $constructorComment.= "@param $propertyType \$$propertyName";
+                }
                 $class->addProperty($propertyName)
                     ->setVisibility('private')
                     ->addComment("@var $propertyType");
-                if (!isset($propertyAttributes->enum) || count($propertyAttributes->enum) > 1) {
-                    $constructor->addParameter($propertyName);
-                    $constructorComment.= "@param $propertyType \$$propertyName";
-                    $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
-                } else {
-                    $constructorBody.= '$this->' . $propertyName . " = '" . $propertyAttributes->enum[0] . "';\n";
-                }
                 $serializableArrayBody.= "'" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
             }
             $constructor->addComment($constructorComment)
