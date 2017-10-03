@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+if (is_file(__DIR__.'/../autoload.php') === true) {
+    include_once __DIR__.'/../autoload.php';
+} elseif (is_file(__DIR__.'/../vendor/autoload.php') === true) {
+    include_once __DIR__.'/../vendor/autoload.php';
+} else {
+    throw new Exception('Cannot find autoloader');
+}
+
+use Elsevier\JSONSchemaPHPGenerator\Console\GenerateCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+
+$command = new GenerateCommand();
+$application->add($command);
+$application->setDefaultCommand($command->getName(), true);
+
+$application->run();
