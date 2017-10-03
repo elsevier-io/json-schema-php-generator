@@ -9,27 +9,13 @@ if (is_file(__DIR__.'/../autoload.php') === true) {
     throw new Exception('Cannot find autoloader');
 }
 
-use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
-use Elsevier\JSONSchemaPHPGenerator\Generator;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
+use Elsevier\JSONSchemaPHPGenerator\Console\GenerateCommand;
+use Symfony\Component\Console\Application;
 
-$localFiles = new Local(__DIR__ . '/outputDir/');
-$outputDir = new Filesystem($localFiles);
-$codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
-$generator = new Generator($outputDir, $codeCreator);
-$jsonSchema = '{"definitions": {
-            "EnumProperty": {
-                "properties": {
-                    "foo": {
-                        "enum": [
-                            "Foo",
-                            "Bar"
-                        ],
-                        "type": "string"
-                    }
-                }
-            }
-        }}';
-$generator->generate($jsonSchema);
-exit(0);
+$application = new Application();
+
+$command = new GenerateCommand();
+$application->add($command);
+$application->setDefaultCommand($command->getName(), true);
+
+$application->run();
