@@ -7,9 +7,6 @@ class EnumPropertyWithSingleValue implements \JsonSerializable
     /** @var string */
     private $foo;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->foo = 'Bar';

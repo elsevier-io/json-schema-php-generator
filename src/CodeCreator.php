@@ -70,8 +70,10 @@ class CodeCreator
                     ->addComment("@var $propertyType");
                 $serializableArrayBody.= "'" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
             }
-            $constructor->addComment($constructorComment)
-                ->addBody($constructorBody);
+            if (!empty($constructorComment)) {
+                $constructor->addComment($constructorComment);
+            }
+            $constructor->addBody($constructorBody);
             $serializableArray = 'return [' . $serializableArrayBody . '];';
             $class->addMethod('jsonSerialize')
                 ->addBody($serializableArray);
