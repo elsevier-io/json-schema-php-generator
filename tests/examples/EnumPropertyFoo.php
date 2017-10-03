@@ -6,9 +6,7 @@ class EnumPropertyFoo {
     const Foo = 'Foo';
     const Bar = 'Bar';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $value;
 
     /**
@@ -17,7 +15,7 @@ class EnumPropertyFoo {
      */
     public function __construct($value)
     {
-        $possibleValues = [self::Bar, self::Foo];
+        $possibleValues = [self::Foo, self::Bar];
         if (!in_array($value, $possibleValues)) {
             throw new InvalidValueException($value . ' is not an allowed value for EnumPropertyFoo');
         }

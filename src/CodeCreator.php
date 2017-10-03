@@ -51,7 +51,7 @@ class CodeCreator
                 if (isset($propertyAttributes->enum)) {
                     if (count($propertyAttributes->enum) > 1) {
                         $propertyType = $name . ucfirst($propertyName);
-                        $classes[$propertyType] = $propertyType;
+                        $classes[$propertyType] = $this->createEnum($propertyType, $propertyAttributes->enum);
                         $classes['InvalidValueException'] = 'InvalidValueException';
                         $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . '->getValue();' . "\n";
                         $constructor->addParameter($propertyName)
@@ -78,5 +78,33 @@ class CodeCreator
             $classes[$name] = $namespace;
         }
         return $classes;
+    }
+
+    private function createEnum($name, $values) {
+        $namespace = new PhpNamespace($this->defaultNamespace);
+        $class = $namespace->addClass($name);
+        foreach ($values as $value) {
+            $class->addConst(ucfirst($value), $value);
+        }
+        $class->addProperty('value')
+            ->setVisibility('private')
+            ->addComment("@var string");
+        $constructor = $class->addMethod('__construct');
+        $constructor->addParameter('value');
+        $constructorComment = "@param \$value\n";
+        $constructorComment.= "@throws InvalidValueException";
+        $constructor->addComment($constructorComment);
+        $constants = array_map(function ($constant) {
+            return 'self::' . ucfirst($constant);
+        }, $values);
+        $constructorBody = ' $possibleValues = [' . implode(', ', $constants) . '];
+            if (!in_array($value, $possibleValues)) {
+                throw new InvalidValueException($value . \' is not an allowed value for EnumPropertyFoo\');
+            }
+            $this->value = $value;';
+        $constructor->addBody($constructorBody);
+        $class->addMethod('getValue')
+            ->addBody(' return $this->value;');
+        return $namespace;
     }
 }

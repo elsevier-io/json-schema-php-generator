@@ -120,6 +120,31 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 //        assertThat($this->removeWhiteSpace($code['InvalidValueException']), is(equalTo($expected)));
     }
 
+    public function testWithEnumPropertyCreatesEnumClass()
+    {
+        $schema = json_decode('{"definitions": {
+            "EnumProperty": {
+                "properties": {
+                    "foo": {
+                        "enum": [
+                            "Foo",
+                            "Bar"
+                        ],
+                        "type": "string"
+                    }
+                }
+            }
+        }}');
+        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(3));
+        assertThat($code, hasKey('EnumPropertyFoo'));
+        $expected = $this->getExample('EnumPropertyFoo.php');
+        assertThat($this->removeWhiteSpace($code['EnumPropertyFoo']), is(equalTo($expected)));
+    }
+
     /**
      * @param string $exampleName
      * @return string
