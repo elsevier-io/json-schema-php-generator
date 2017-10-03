@@ -23,6 +23,7 @@ class GenerateCommand extends Command {
             ->setDefinition(
                 new InputDefinition([
                     new InputArgument('schema', InputArgument::REQUIRED),
+                    new InputArgument('class', InputArgument::REQUIRED),
                     new InputArgument('namespace', InputArgument::REQUIRED),
                     new InputOption('outputDir', 'o', InputOption::VALUE_REQUIRED, 'Target dir for output files', './outputDir/'),
                 ])
@@ -34,7 +35,7 @@ class GenerateCommand extends Command {
         $outputDir = $input->getOption('outputDir');
         $outputDirFiles = new Local($outputDir);
         $outputDir = new Filesystem($outputDirFiles);
-        $codeCreator = new CodeCreator($input->getArgument('namespace'));
+        $codeCreator = new CodeCreator($input->getArgument('class'), $input->getArgument('namespace'));
         $generator = new Generator($outputDir, $codeCreator);
         $localFiles = new Local('.');
         $schemaDir = new Filesystem($localFiles);

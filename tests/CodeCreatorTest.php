@@ -10,14 +10,12 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreatesClassWithIntegerProperty()
     {
-        $schema = json_decode('{"definitions": {
-            "IntegerProperty": {
-                "properties": {
-                    "foo": {"type": "number"}
-                }
+        $schema = json_decode('{
+            "properties": {
+                "foo": {"type": "number"}
             }
-        }}');
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        }');
+        $codeCreator = new CodeCreator('IntegerProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 
@@ -27,14 +25,12 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
     
     public function testCreatesClassWithStringProperty()
     {
-        $schema = json_decode('{"definitions": {
-            "StringProperty": {
-                "properties": {
-                    "foo": {"type": "string"}
-                }
+        $schema = json_decode('{
+            "properties": {
+                "foo": {"type": "string"}
             }
-        }}');
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        }');
+        $codeCreator = new CodeCreator('StringProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 
@@ -44,14 +40,12 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
     
     public function testCreatesClassWithBooleanProperty()
     {
-        $schema = json_decode('{"definitions": {
-            "BooleanProperty": {
-                "properties": {
-                    "foo": {"type": "boolean"}
-                }
+        $schema = json_decode('{
+            "properties": {
+                "foo": {"type": "boolean"}
             }
-        }}');
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        }');
+        $codeCreator = new CodeCreator('BooleanProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 
@@ -61,19 +55,17 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 
     public function testCreatesClassWithEnumPropertyWithSingleValueAsConstant()
     {
-        $schema = json_decode('{"definitions": {
-            "EnumPropertyWithSingleValue": {
-                "properties": {
-                    "foo": {
-                        "enum": [
-                            "Bar"
-                        ],
-                        "type": "string"
-                    }
+        $schema = json_decode('{
+            "properties": {
+                "foo": {
+                    "enum": [
+                        "Bar"
+                    ],
+                    "type": "string"
                 }
             }
-        }}');
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        }');
+        $codeCreator = new CodeCreator('EnumPropertyWithSingleValue', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 
@@ -83,20 +75,18 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 
     public function testWithEnumPropertyCreatesTargetClass()
     {
-        $schema = json_decode('{"definitions": {
-            "EnumProperty": {
-                "properties": {
-                    "foo": {
-                        "enum": [
-                            "Foo",
-                            "Bar"
-                        ],
-                        "type": "string"
-                    }
+        $schema = json_decode('{
+            "properties": {
+                "foo": {
+                    "enum": [
+                        "Foo",
+                        "Bar"
+                    ],
+                    "type": "string"
                 }
             }
-        }}');
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        }');
+        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 
@@ -108,20 +98,18 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 
     public function testWithEnumPropertyCreatesEnumClass()
     {
-        $schema = json_decode('{"definitions": {
-            "EnumProperty": {
-                "properties": {
-                    "foo": {
-                        "enum": [
-                            "Foo",
-                            "Bar"
-                        ],
-                        "type": "string"
-                    }
+        $schema = json_decode('{
+            "properties": {
+                "foo": {
+                    "enum": [
+                        "Foo",
+                        "Bar"
+                    ],
+                    "type": "string"
                 }
             }
-        }}');
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        }');
+        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 
@@ -131,20 +119,18 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 
     public function testWithEnumPropertyCreatesExceptionUsedByEnum()
     {
-        $schema = json_decode('{"definitions": {
-            "EnumProperty": {
-                "properties": {
-                    "foo": {
-                        "enum": [
-                            "Foo",
-                            "Bar"
-                        ],
-                        "type": "string"
-                    }
+        $schema = json_decode('{
+            "properties": {
+                "foo": {
+                    "enum": [
+                        "Foo",
+                        "Bar"
+                    ],
+                    "type": "string"
                 }
             }
-        }}');
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        }');
+        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 
