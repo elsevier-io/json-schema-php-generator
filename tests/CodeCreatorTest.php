@@ -22,9 +22,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(1));
-        assertThat($code, hasKey('IntegerProperty'));
-        $expected = $this->getExample('IntegerProperty.php');
-        assertThat($this->removeWhiteSpace($code['IntegerProperty']), is(equalTo($expected)));
+        assertThat($code, hasClassThatMatchesTheExample('IntegerProperty'));
     }
     
     public function testCreatesClassWithStringProperty()
@@ -41,9 +39,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(1));
-        assertThat($code, hasKey('StringProperty'));
-        $expected = $this->getExample('StringProperty.php');
-        assertThat($this->removeWhiteSpace($code['StringProperty']), is(equalTo($expected)));
+        assertThat($code, hasClassThatMatchesTheExample('StringProperty'));
     }
     
     public function testCreatesClassWithBooleanProperty()
@@ -60,9 +56,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(1));
-        assertThat($code, hasKey('BooleanProperty'));
-        $expected = $this->getExample('BooleanProperty.php');
-        assertThat($this->removeWhiteSpace($code['BooleanProperty']), is(equalTo($expected)));
+        assertThat($code, hasClassThatMatchesTheExample('BooleanProperty'));
     }
 
     public function testCreatesClassWithEnumPropertyWithSingleValueAsConstant()
@@ -84,9 +78,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(1));
-        assertThat($code, hasKey('EnumPropertyWithSingleValue'));
-        $expected = $this->getExample('EnumPropertyWithSingleValue.php');
-        assertThat($this->removeWhiteSpace($code['EnumPropertyWithSingleValue']), is(equalTo($expected)));
+        assertThat($code, hasClassThatMatchesTheExample('EnumPropertyWithSingleValue'));
     }
 
     public function testWithEnumPropertyCreatesTargetClass()
@@ -109,11 +101,9 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(3));
-        assertThat($code, hasKey('EnumProperty'));
         assertThat($code, hasKey('EnumPropertyFoo'));
         assertThat($code, hasKey('InvalidValueException'));
-        $expected = $this->getExample('EnumProperty.php');
-        assertThat($this->removeWhiteSpace($code['EnumProperty']), is(equalTo($expected)));
+        assertThat($code, hasClassThatMatchesTheExample('EnumProperty'));
     }
 
     public function testWithEnumPropertyCreatesEnumClass()
@@ -136,9 +126,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(3));
-        assertThat($code, hasKey('EnumPropertyFoo'));
-        $expected = $this->getExample('EnumPropertyFoo.php');
-        assertThat($this->removeWhiteSpace($code['EnumPropertyFoo']), is(equalTo($expected)));
+        assertThat($code, hasClassThatMatchesTheExample('EnumPropertyFoo'));
     }
 
     public function testWithEnumPropertyCreatesExceptionUsedByEnum()
@@ -161,23 +149,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(3));
-        assertThat($code, hasKey('InvalidValueException'));
-        $expected = $this->getExample('InvalidValueException.php');
-        assertThat($this->removeWhiteSpace($code['InvalidValueException']), is(equalTo($expected)));
+        assertThat($code, hasClassThatMatchesTheExample('InvalidValueException'));
     }
 
-    /**
-     * @param string $exampleName
-     * @return string
-     */
-    public function getExample($exampleName) {
-        $localFiles = new Local(__DIR__ . '/examples/');
-        $examples = new Filesystem($localFiles);
-        $example = $this->removeWhiteSpace($examples->read($exampleName));
-        return substr($example, 5);
-    }
-
-    private function removeWhiteSpace($code) {
-        return preg_replace('/\s+/', '', $code);
-    }
 }

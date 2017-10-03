@@ -39,7 +39,8 @@
     "autoload-dev": {
         "psr-4": { "Elsevier\\JSONSchemaPHPGenerator\\Tests\\": "tests/" },
         "files": [
-            "./vendor/hamcrest/hamcrest-php/hamcrest/Hamcrest.php"
+            "./vendor/hamcrest/hamcrest-php/hamcrest/Hamcrest.php",
+            "./tests/Matchers/matchers.php"
         ]
     },
     "scripts": {
