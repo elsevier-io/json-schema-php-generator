@@ -68,13 +68,13 @@ class CodeCreator
                 $class->addProperty($propertyName)
                     ->setVisibility('private')
                     ->addComment("@var $propertyType");
-                $serializableArrayBody.= "'" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
+                $serializableArrayBody.= "    '" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
             }
             if (!empty($constructorComment)) {
                 $constructor->addComment($constructorComment);
             }
             $constructor->addBody($constructorBody);
-            $serializableArray = 'return [' . $serializableArrayBody . '];';
+            $serializableArray = "return [\n" . $serializableArrayBody . "];";
             $class->addMethod('jsonSerialize')
                 ->addBody($serializableArray);
             $classes[$name] = $namespace;
