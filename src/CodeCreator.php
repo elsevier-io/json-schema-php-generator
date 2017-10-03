@@ -30,8 +30,8 @@ class CodeCreator
         $classes = [];
         foreach ($schema->definitions as $name => $definition) {
             $namespace = new PhpNamespace($this->defaultNamespace);
-            $class = $namespace->addClass($name);
-            $class->addImplement('\JsonSerializable');
+            $class = $namespace->addClass($name)
+                            ->addImplement('\JsonSerializable');
             $constructor = $class->addMethod('__construct');
             $constructorComment = '';
             $constructorBody = '';
@@ -94,11 +94,10 @@ class CodeCreator
         $class->addProperty('value')
             ->setVisibility('private')
             ->addComment("@var string");
-        $constructor = $class->addMethod('__construct');
-        $constructor->addParameter('value');
+
         $constructorComment = "@param \$value\n";
         $constructorComment.= "@throws InvalidValueException";
-        $constructor->addComment($constructorComment);
+
         $constants = array_map(function ($constant) {
             return 'self::' . ucfirst($constant);
         }, $values);
@@ -107,7 +106,11 @@ class CodeCreator
                 throw new InvalidValueException($value . \' is not an allowed value for EnumPropertyFoo\');
             }
             $this->value = $value;';
-        $constructor->addBody($constructorBody);
+
+        $constructor = $class->addMethod('__construct')
+                            ->addComment($constructorComment)
+                            ->addBody($constructorBody);
+        $constructor->addParameter('value');
         $class->addMethod('getValue')
             ->addBody(' return $this->value;');
         return $namespace;
