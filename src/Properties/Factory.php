@@ -15,6 +15,8 @@ class Factory
         }
         if ($attributes->type === 'number') {
             return new IntegerProperty($name);
+        } elseif ($attributes->type === 'string' && !isset($attributes->enum)) {
+            return new StringProperty($name);
         }
     }
 }

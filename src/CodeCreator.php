@@ -60,7 +60,6 @@ class CodeCreator
             $jsonPropertyType = isset($propertyAttributes->type) ? $propertyAttributes->type : 'number';
             switch ($jsonPropertyType) {
                 case 'boolean':
-                case 'string':
                 default:
                     $propertyType = $jsonPropertyType;
                     break;
