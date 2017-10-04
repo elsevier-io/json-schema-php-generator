@@ -1,3 +1,4 @@
 composer.lock
+outputDir
 phpunit.xml
 vendor

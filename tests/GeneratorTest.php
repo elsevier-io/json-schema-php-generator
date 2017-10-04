@@ -13,7 +13,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
 {
     public function testEmptySchemaCreatesNoFiles() {
         $fileSystem = $this->createFilesystem();
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
         $generator = new Generator($fileSystem, $codeCreator);
 
         $generator->generate('{}');
@@ -22,16 +22,14 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
     }
 
     public function testBasicSchemaCreatesOneClassFile() {
-        $schema = '{"definitions": {
-            "FooBar": {
-                "properties": {
-                    "foo": {"type": "integer"},
-                    "bar": {"type": "string"}
-                }
+        $schema = '{
+            "properties": {
+                "foo": {"type": "integer"},
+                "bar": {"type": "string"}
             }
-        }}';
+        }';
         $fileSystem = $this->createFilesystem();
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
         $generator = new Generator($fileSystem, $codeCreator);
 
         $generator->generate($schema);
@@ -41,7 +39,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
 
     public function testInvalidJsonThrowsException() {
         $schema = '{';
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
         $generator = new Generator($this->createFilesystem(), $codeCreator);
 
         $this->setExpectedException(InvalidJsonException::class);
@@ -49,10 +47,12 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
     }
 
     public function testInvalidJsonSchemaThrowsException() {
-        $schema = '{"definitions": {
-            "Baz": "invalid"
-        }}';
-        $codeCreator = new CodeCreator('Elsevier\JSONSchemaPHPGenerator\Examples');
+        $schema = '{
+            "properties": {
+                "Baz": "invalid"
+            }
+        }';
+        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
         $generator = new Generator($this->createFilesystem(), $codeCreator);
 
         $this->setExpectedException(InvalidSchemaException::class);

@@ -9,13 +9,19 @@ class CodeCreator
     /**
      * @var string
      */
+    private $defaultClass;
+    /**
+     * @var string
+     */
     private $defaultNamespace;
 
     /**
+     * @param string $defaultClass
      * @param string $defaultNamespace
      */
-    public function __construct($defaultNamespace)
+    public function __construct($defaultClass, $defaultNamespace)
     {
+        $this->defaultClass = $defaultClass;
         $this->defaultNamespace = $defaultNamespace;
     }
 
@@ -24,61 +30,59 @@ class CodeCreator
      * @return PhpNamespace[]
      */
     public function create($schema) {
-        if (!isset($schema->definitions)) {
+        if (!isset($schema->properties)) {
             return [];
         }
         $classes = [];
-        foreach ($schema->definitions as $name => $definition) {
-            $namespace = new PhpNamespace($this->defaultNamespace);
-            $class = $namespace->addClass($name)
-                            ->addImplement('\JsonSerializable');
-            $constructor = $class->addMethod('__construct');
-            $constructorComment = '';
-            $constructorBody = '';
-            $serializableArrayBody = '';
-            foreach ($definition->properties as $propertyName => $propertyAttributes) {
-                $jsonPropertyType = isset($propertyAttributes->type) ? $propertyAttributes->type : 'number';
-                switch ($jsonPropertyType) {
-                    case 'number':
-                        $propertyType = 'integer';
-                        break;
-                    case 'boolean':
-                    case 'string':
-                    default:
-                        $propertyType = $jsonPropertyType;
-                        break;
-                }
-                if (isset($propertyAttributes->enum)) {
-                    if (count($propertyAttributes->enum) > 1) {
-                        $propertyType = $name . ucfirst($propertyName);
-                        $classes[$propertyType] = $this->createEnum($propertyType, $propertyAttributes->enum);
-                        $classes['InvalidValueException'] = $this->createException('InvalidValueException');
-                        $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . '->getValue();' . "\n";
-                        $constructor->addParameter($propertyName)
-                            ->setTypeHint($this->defaultNamespace . '\\' . $propertyType);
-                        $constructorComment.= "@param $propertyType \$$propertyName";
-                    } else {
-                        $constructorBody.= '$this->' . $propertyName . " = '" . $propertyAttributes->enum[0] . "';\n";
-                    }
-                } else {
-                    $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
-                    $constructor->addParameter($propertyName);
+        $namespace = new PhpNamespace($this->defaultNamespace);
+        $class = $namespace->addClass($this->defaultClass)
+                        ->addImplement('\JsonSerializable');
+        $constructor = $class->addMethod('__construct');
+        $constructorComment = '';
+        $constructorBody = '';
+        $serializableArrayBody = '';
+        foreach ($schema->properties as $propertyName => $propertyAttributes) {
+            $jsonPropertyType = isset($propertyAttributes->type) ? $propertyAttributes->type : 'number';
+            switch ($jsonPropertyType) {
+                case 'number':
+                    $propertyType = 'integer';
+                    break;
+                case 'boolean':
+                case 'string':
+                default:
+                    $propertyType = $jsonPropertyType;
+                    break;
+            }
+            if (isset($propertyAttributes->enum)) {
+                if (count($propertyAttributes->enum) > 1) {
+                    $propertyType = $this->defaultClass . ucfirst($propertyName);
+                    $classes[$propertyType] = $this->createEnum($propertyType, $propertyAttributes->enum);
+                    $classes['InvalidValueException'] = $this->createException('InvalidValueException');
+                    $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . '->getValue();' . "\n";
+                    $constructor->addParameter($propertyName)
+                        ->setTypeHint($this->defaultNamespace . '\\' . $propertyType);
                     $constructorComment.= "@param $propertyType \$$propertyName";
+                } else {
+                    $constructorBody.= '$this->' . $propertyName . " = '" . $propertyAttributes->enum[0] . "';\n";
                 }
-                $class->addProperty($propertyName)
-                    ->setVisibility('private')
-                    ->addComment("@var $propertyType");
-                $serializableArrayBody.= "'" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
+            } else {
+                $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
+                $constructor->addParameter($propertyName);
+                $constructorComment.= "@param $propertyType \$$propertyName";
             }
-            if (!empty($constructorComment)) {
-                $constructor->addComment($constructorComment);
-            }
-            $constructor->addBody($constructorBody);
-            $serializableArray = 'return [' . $serializableArrayBody . '];';
-            $class->addMethod('jsonSerialize')
-                ->addBody($serializableArray);
-            $classes[$name] = $namespace;
+            $class->addProperty($propertyName)
+                ->setVisibility('private')
+                ->addComment("@var $propertyType");
+            $serializableArrayBody.= "    '" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
         }
+        if (!empty($constructorComment)) {
+            $constructor->addComment($constructorComment);
+        }
+        $constructor->addBody($constructorBody);
+        $serializableArray = "return [\n" . $serializableArrayBody . "];";
+        $class->addMethod('jsonSerialize')
+            ->addBody($serializableArray);
+        $classes[$this->defaultClass] = $namespace;
         return $classes;
     }
 
