@@ -31,7 +31,8 @@ class Generator
      * @throws InvalidJsonException
      * @throws InvalidSchemaException
      */
-    public function generate($rawSchema) {
+    public function generate($rawSchema)
+    {
         $schema = json_decode($rawSchema);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new InvalidJsonException('JSON Schema is invalid JSON.');

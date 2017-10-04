@@ -6,12 +6,14 @@ use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
-class UntypedProperty implements Property {
+class UntypedProperty implements Property
+{
 
     /**
      * @inheritdoc
      */
-    public function constructorBody() {
+    public function constructorBody()
+    {
         return '';
     }
 
@@ -26,7 +28,8 @@ class UntypedProperty implements Property {
     /**
      * @inheritdoc
      */
-    public function addConstructorParameter(Method $constructor) {
+    public function addConstructorParameter(Method $constructor)
+    {
         return $constructor;
     }
 
@@ -41,7 +44,8 @@ class UntypedProperty implements Property {
     /**
      * @inheritdoc
      */
-    public function serializingCode(){
+    public function serializingCode()
+    {
         return '';
     }
 

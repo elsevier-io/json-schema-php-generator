@@ -2,4 +2,6 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator;
 
-class InvalidJsonException extends GeneratorException {}
+class InvalidJsonException extends GeneratorException
+{
+}

@@ -2,4 +2,6 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator;
 
-class GeneratorException extends \Exception {}
+class GeneratorException extends \Exception
+{
+}

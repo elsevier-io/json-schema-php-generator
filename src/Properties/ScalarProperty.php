@@ -30,7 +30,8 @@ class ScalarProperty implements Property
     /**
      * @inheritdoc
      */
-    public function constructorBody() {
+    public function constructorBody()
+    {
         return '$this->' . $this->name . ' = $' . $this->name . ';' . "\n";
     }
 
@@ -45,7 +46,8 @@ class ScalarProperty implements Property
     /**
      * @inheritdoc
      */
-    public function addConstructorParameter(Method $constructor) {
+    public function addConstructorParameter(Method $constructor)
+    {
         $constructor->addParameter($this->name);
         return $constructor;
     }
@@ -64,7 +66,8 @@ class ScalarProperty implements Property
     /**
      * @inheritdoc
      */
-    public function serializingCode(){
+    public function serializingCode()
+    {
         return "    '" . $this->name . "'=>" . '$this->' . $this->name . ",\n";
     }
 

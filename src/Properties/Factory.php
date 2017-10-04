@@ -11,7 +11,8 @@ class Factory
      * @param string $namespace
      * @return Property
      */
-    public function create($name, $attributes, $className, $namespace) {
+    public function create($name, $attributes, $className, $namespace)
+    {
         if (!isset($attributes->type)) {
             return new UntypedProperty();
         }
