@@ -56,25 +56,19 @@ class CodeCreator
                 $class = $property->addTo($class);
                 $serializableArrayBody.= $property->serializingCode();
                 continue;
+            } elseif (isset($propertyAttributes->enum) && count($propertyAttributes->enum) > 1) {
+                $propertyType = $this->defaultClass . ucfirst($propertyName);
+                $classes[$propertyType] = $this->createEnum($propertyType, $propertyAttributes->enum);
+                $classes['InvalidValueException'] = $this->createException('InvalidValueException');
+                $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . '->getValue();' . "\n";
+                $constructor->addParameter($propertyName)
+                    ->setTypeHint($this->defaultNamespace . '\\' . $propertyType);
+                $constructorComment.= "@param $propertyType \$$propertyName";
+                $class->addProperty($propertyName)
+                    ->setVisibility('private')
+                    ->addComment("@var $propertyType");
+                $serializableArrayBody.= "    '" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
             }
-            $propertyType = isset($propertyAttributes->type) ? $propertyAttributes->type : 'number';
-            if (isset($propertyAttributes->enum)) {
-                if (count($propertyAttributes->enum) > 1) {
-                    $propertyType = $this->defaultClass . ucfirst($propertyName);
-                    $classes[$propertyType] = $this->createEnum($propertyType, $propertyAttributes->enum);
-                    $classes['InvalidValueException'] = $this->createException('InvalidValueException');
-                    $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . '->getValue();' . "\n";
-                    $constructor->addParameter($propertyName)
-                        ->setTypeHint($this->defaultNamespace . '\\' . $propertyType);
-                    $constructorComment.= "@param $propertyType \$$propertyName";
-                } else {
-                    $constructorBody.= '$this->' . $propertyName . " = '" . $propertyAttributes->enum[0] . "';\n";
-                }
-            }
-            $class->addProperty($propertyName)
-                ->setVisibility('private')
-                ->addComment("@var $propertyType");
-            $serializableArrayBody.= "    '" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
         }
         if (!empty($constructorComment)) {
             $constructor->addComment($constructorComment);

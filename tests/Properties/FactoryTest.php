@@ -4,6 +4,7 @@ namespace Elsevier\JSONSchemaPHPGenerator\Tests\Properties;
 
 use Elsevier\JSONSchemaPHPGenerator\Properties\Factory;
 use Elsevier\JSONSchemaPHPGenerator\Properties\BooleanProperty;
+use Elsevier\JSONSchemaPHPGenerator\Properties\ConstantProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\IntegerProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\StringProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\UntypedProperty;
@@ -45,5 +46,20 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         $property = $factory->create('FooBar', $attributes);
 
         assertThat($property, is(anInstanceOf(BooleanProperty::class)));
+    }
+
+    public function testSingleValueEnumReturnsConstantProperty() {
+        $attributes = json_decode(
+    '{
+            "enum": [
+                "Bar"
+            ],
+            "type": "string"
+        }');
+
+        $factory = new Factory();
+        $property = $factory->create('FooBar', $attributes);
+
+        assertThat($property, is(anInstanceOf(ConstantProperty::class)));
     }
 }
