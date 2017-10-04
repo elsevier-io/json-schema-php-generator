@@ -2,6 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator;
 
+use Elsevier\JSONSchemaPHPGenerator\Properties\Factory;
 use Nette\PhpGenerator\PhpNamespace;
 
 class CodeCreator
@@ -14,6 +15,10 @@ class CodeCreator
      * @var string
      */
     private $defaultNamespace;
+    /**
+     * @var Factory
+     */
+    private $properties;
 
     /**
      * @param string $defaultClass
@@ -23,6 +28,7 @@ class CodeCreator
     {
         $this->defaultClass = $defaultClass;
         $this->defaultNamespace = $defaultNamespace;
+        $this->properties = new Factory();
     }
 
     /**
@@ -42,38 +48,15 @@ class CodeCreator
         $constructorBody = '';
         $serializableArrayBody = '';
         foreach ($schema->properties as $propertyName => $propertyAttributes) {
-            $jsonPropertyType = isset($propertyAttributes->type) ? $propertyAttributes->type : 'number';
-            switch ($jsonPropertyType) {
-                case 'number':
-                    $propertyType = 'integer';
-                    break;
-                case 'boolean':
-                case 'string':
-                default:
-                    $propertyType = $jsonPropertyType;
-                    break;
+            $property = $this->properties->create($propertyName, $propertyAttributes, $this->defaultClass, $this->defaultNamespace);
+            if ($property) {
+                $constructorBody.= $property->constructorBody();
+                $constructorComment.= $property->constructorComment();
+                $constructor = $property->addConstructorParameter($constructor);
+                $class = $property->addTo($class);
+                $serializableArrayBody.= $property->serializingCode();
+                $classes = array_merge($classes, $property->extraClasses($this));
             }
-            if (isset($propertyAttributes->enum)) {
-                if (count($propertyAttributes->enum) > 1) {
-                    $propertyType = $this->defaultClass . ucfirst($propertyName);
-                    $classes[$propertyType] = $this->createEnum($propertyType, $propertyAttributes->enum);
-                    $classes['InvalidValueException'] = $this->createException('InvalidValueException');
-                    $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . '->getValue();' . "\n";
-                    $constructor->addParameter($propertyName)
-                        ->setTypeHint($this->defaultNamespace . '\\' . $propertyType);
-                    $constructorComment.= "@param $propertyType \$$propertyName";
-                } else {
-                    $constructorBody.= '$this->' . $propertyName . " = '" . $propertyAttributes->enum[0] . "';\n";
-                }
-            } else {
-                $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
-                $constructor->addParameter($propertyName);
-                $constructorComment.= "@param $propertyType \$$propertyName";
-            }
-            $class->addProperty($propertyName)
-                ->setVisibility('private')
-                ->addComment("@var $propertyType");
-            $serializableArrayBody.= "    '" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
         }
         if (!empty($constructorComment)) {
             $constructor->addComment($constructorComment);
@@ -91,7 +74,7 @@ class CodeCreator
      * @param array $values
      * @return PhpNamespace
      */
-    private function createEnum($className, $values) {
+    public function createEnum($className, $values) {
         $namespace = new PhpNamespace($this->defaultNamespace);
         $class = $namespace->addClass($className);
         foreach ($values as $value) {
@@ -126,7 +109,7 @@ class CodeCreator
      * @param string $className
      * @return PhpNamespace
      */
-    private function createException($className) {
+    public function createException($className) {
         $namespace = new PhpNamespace($this->defaultNamespace);
         $namespace->addClass($className)
             ->addExtend('\Exception');
