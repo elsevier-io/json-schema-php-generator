@@ -2,6 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 
+use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
@@ -33,4 +34,10 @@ interface Property
      * @return string
      */
     public function serializingCode();
+
+    /**
+     * @param CodeCreator $code
+     * @return array
+     */
+    public function extraClasses(CodeCreator $code);
 }

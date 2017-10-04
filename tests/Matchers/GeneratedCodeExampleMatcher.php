@@ -31,6 +31,11 @@ class GeneratedCodeExampleMatcher extends BaseMatcher
         $description->appendValue($this->expectedCode);
     }
 
+    public function describeMismatch($item, Description $description)
+    {
+        $description->appendText('was ')->appendValue($this->removeWhiteSpace($item[$this->className]));
+    }
+
     private function getExample($exampleName) {
         $localFiles = new Local(__DIR__ . '/../examples/');
         $examples = new Filesystem($localFiles);

@@ -7,9 +7,11 @@ class Factory
     /**
      * @param string $name
      * @param stdObject $attributes
+     * @param string $className
+     * @param string $namespace
      * @return Property
      */
-    public function create($name, $attributes) {
+    public function create($name, $attributes, $className, $namespace) {
         if (!isset($attributes->type)) {
             return new UntypedProperty();
         }
@@ -17,7 +19,7 @@ class Factory
             if (count($attributes->enum) === 1) {
                 return new ConstantProperty($name, $attributes->enum[0]);
             } else {
-                return;
+                return new EnumProperty($name, $attributes->enum, $className, $namespace);
             }
         }
         if ($attributes->type === 'number') {

@@ -48,26 +48,14 @@ class CodeCreator
         $constructorBody = '';
         $serializableArrayBody = '';
         foreach ($schema->properties as $propertyName => $propertyAttributes) {
-            $property = $this->properties->create($propertyName, $propertyAttributes);
+            $property = $this->properties->create($propertyName, $propertyAttributes, $this->defaultClass, $this->defaultNamespace);
             if ($property) {
                 $constructorBody.= $property->constructorBody();
                 $constructorComment.= $property->constructorComment();
                 $constructor = $property->addConstructorParameter($constructor);
                 $class = $property->addTo($class);
                 $serializableArrayBody.= $property->serializingCode();
-                continue;
-            } elseif (isset($propertyAttributes->enum) && count($propertyAttributes->enum) > 1) {
-                $propertyType = $this->defaultClass . ucfirst($propertyName);
-                $classes[$propertyType] = $this->createEnum($propertyType, $propertyAttributes->enum);
-                $classes['InvalidValueException'] = $this->createException('InvalidValueException');
-                $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . '->getValue();' . "\n";
-                $constructor->addParameter($propertyName)
-                    ->setTypeHint($this->defaultNamespace . '\\' . $propertyType);
-                $constructorComment.= "@param $propertyType \$$propertyName";
-                $class->addProperty($propertyName)
-                    ->setVisibility('private')
-                    ->addComment("@var $propertyType");
-                $serializableArrayBody.= "    '" . $propertyName . "'=>" . '$this->' . $propertyName . ",\n";
+                $classes = array_merge($classes, $property->extraClasses($this));
             }
         }
         if (!empty($constructorComment)) {
@@ -86,7 +74,7 @@ class CodeCreator
      * @param array $values
      * @return PhpNamespace
      */
-    private function createEnum($className, $values) {
+    public function createEnum($className, $values) {
         $namespace = new PhpNamespace($this->defaultNamespace);
         $class = $namespace->addClass($className);
         foreach ($values as $value) {
@@ -121,7 +109,7 @@ class CodeCreator
      * @param string $className
      * @return PhpNamespace
      */
-    private function createException($className) {
+    public function createException($className) {
         $namespace = new PhpNamespace($this->defaultNamespace);
         $namespace->addClass($className)
             ->addExtend('\Exception');

@@ -2,6 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 
+use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
@@ -42,5 +43,13 @@ class UntypedProperty implements Property {
      */
     public function serializingCode(){
         return '';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function extraClasses(CodeCreator $code)
+    {
+        return [];
     }
 }

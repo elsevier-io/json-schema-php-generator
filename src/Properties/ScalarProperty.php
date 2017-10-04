@@ -2,6 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 
+use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
@@ -65,5 +66,13 @@ class ScalarProperty implements Property
      */
     public function serializingCode(){
         return "    '" . $this->name . "'=>" . '$this->' . $this->name . ",\n";
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function extraClasses(CodeCreator $code)
+    {
+        return [];
     }
 }
