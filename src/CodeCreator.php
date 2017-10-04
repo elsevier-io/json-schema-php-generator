@@ -35,7 +35,8 @@ class CodeCreator
      * @param string $schema - A valid JSON Schema
      * @return PhpNamespace[]
      */
-    public function create($schema) {
+    public function create($schema)
+    {
         if (!isset($schema->properties)) {
             return [];
         }
@@ -74,7 +75,8 @@ class CodeCreator
      * @param array $values
      * @return PhpNamespace
      */
-    public function createEnum($className, $values) {
+    public function createEnum($className, $values)
+    {
         $namespace = new PhpNamespace($this->defaultNamespace);
         $class = $namespace->addClass($className);
         foreach ($values as $value) {
@@ -109,7 +111,8 @@ class CodeCreator
      * @param string $className
      * @return PhpNamespace
      */
-    public function createException($className) {
+    public function createException($className)
+    {
         $namespace = new PhpNamespace($this->defaultNamespace);
         $namespace->addClass($className)
             ->addExtend('\Exception');

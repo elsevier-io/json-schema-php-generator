@@ -13,7 +13,8 @@ use Elsevier\JSONSchemaPHPGenerator\Generator;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
-class GenerateCommand extends Command {
+class GenerateCommand extends Command
+{
 
     protected function configure()
     {
