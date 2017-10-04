@@ -12,6 +12,9 @@ Running it without any args or options will give you usage docs.
 So far this is only a partial implementation of the JSON Schema. See tests for which aspects have been implemented.
 
 ## TODOs
-- Add console logging to command
+- Add more console logging to command
 - Add option to read configs from file rather than pass in as args
 - Make namespace argument optional (and hence create output without any namespaces)
+- Add coding standards/linting
+- Add support for required/optional properties
+- Add support for arrays, nulls and sub-references
