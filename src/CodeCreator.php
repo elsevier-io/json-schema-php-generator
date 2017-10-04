@@ -57,13 +57,7 @@ class CodeCreator
                 $serializableArrayBody.= $property->serializingCode();
                 continue;
             }
-            $jsonPropertyType = isset($propertyAttributes->type) ? $propertyAttributes->type : 'number';
-            switch ($jsonPropertyType) {
-                case 'boolean':
-                default:
-                    $propertyType = $jsonPropertyType;
-                    break;
-            }
+            $propertyType = isset($propertyAttributes->type) ? $propertyAttributes->type : 'number';
             if (isset($propertyAttributes->enum)) {
                 if (count($propertyAttributes->enum) > 1) {
                     $propertyType = $this->defaultClass . ucfirst($propertyName);
@@ -76,10 +70,6 @@ class CodeCreator
                 } else {
                     $constructorBody.= '$this->' . $propertyName . " = '" . $propertyAttributes->enum[0] . "';\n";
                 }
-            } else {
-                $constructorBody.= '$this->' . $propertyName . ' = $' . $propertyName . ';' . "\n";
-                $constructor->addParameter($propertyName);
-                $constructorComment.= "@param $propertyType \$$propertyName";
             }
             $class->addProperty($propertyName)
                 ->setVisibility('private')

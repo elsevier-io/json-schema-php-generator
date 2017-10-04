@@ -3,6 +3,7 @@
 namespace Elsevier\JSONSchemaPHPGenerator\Tests\Properties;
 
 use Elsevier\JSONSchemaPHPGenerator\Properties\Factory;
+use Elsevier\JSONSchemaPHPGenerator\Properties\BooleanProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\IntegerProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\StringProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\UntypedProperty;
@@ -35,5 +36,14 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         $property = $factory->create('FooBar', $attributes);
 
         assertThat($property, is(anInstanceOf(StringProperty::class)));
+    }
+
+    public function testBooleanReturnsBooleanProperty() {
+        $attributes = json_decode('{ "type": "boolean"}');
+
+        $factory = new Factory();
+        $property = $factory->create('FooBar', $attributes);
+
+        assertThat($property, is(anInstanceOf(BooleanProperty::class)));
     }
 }
