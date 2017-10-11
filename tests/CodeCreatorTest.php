@@ -135,4 +135,27 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, arrayWithSize(3));
         assertThat($code, hasClassThatMatchesTheExample('InvalidValueException'));
     }
+
+    public function testCreatesClassWithMultipleProperties()
+    {
+        $schema = json_decode('{
+            "properties": {
+                "bool": {"type": "boolean"},
+                "enum": {
+                    "enum": [
+                        "Bar",
+                        "Foo"
+                    ],
+                    "type": "string"
+                },
+                "string": {"type": "string"}
+            }
+        }');
+        $codeCreator = new CodeCreator('MultipleProperties', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('MultipleProperties'));
+    }
 }

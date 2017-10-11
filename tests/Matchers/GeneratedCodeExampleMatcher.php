@@ -43,8 +43,9 @@ class GeneratedCodeExampleMatcher extends BaseMatcher
             }
             $char++;
         }
-        $mismatchedText = substr($actualText, $char);
+        $mismatchedText = substr($actualText, $char, 50);
         $description->appendText('differs at ')->appendValue($mismatchedText);
+        $description->appendText("\nactual text ")->appendValue($actualText);
     }
 
     private function getExample($exampleName)

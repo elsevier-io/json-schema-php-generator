@@ -1,6 +1,7 @@
 == Version 0.4.0 ==
 
 - Add custom CS ruleset, including linting of test files
+- Add support for objects with multiple properties
 
 == Version 0.3.0 ==
 

@@ -61,7 +61,7 @@ class EnumProperty implements Property
     {
         $class->addProperty($this->name)
             ->setVisibility('private')
-            ->addComment("@var $this->enumName");
+            ->addComment("@var string");
         return $class;
     }
 

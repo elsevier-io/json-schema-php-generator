@@ -45,22 +45,25 @@ class CodeCreator
         $class = $namespace->addClass($this->defaultClass)
                         ->addImplement('\JsonSerializable');
         $constructor = $class->addMethod('__construct');
-        $constructorComment = '';
+        $constructorComment = [];
         $constructorBody = '';
         $serializableArrayBody = '';
         foreach ($schema->properties as $propertyName => $propertyAttributes) {
             $property = $this->properties->create($propertyName, $propertyAttributes, $this->defaultClass, $this->defaultNamespace);
             if ($property) {
                 $constructorBody.= $property->constructorBody();
-                $constructorComment.= $property->constructorComment();
+                $constructorComment[] = $property->constructorComment();
                 $constructor = $property->addConstructorParameter($constructor);
                 $class = $property->addTo($class);
                 $serializableArrayBody.= $property->serializingCode();
                 $classes = array_merge($classes, $property->extraClasses($this));
             }
         }
+        $constructorComment = array_filter($constructorComment, function ($comment) {
+            return !empty($comment);
+        });
         if (!empty($constructorComment)) {
-            $constructor->addComment($constructorComment);
+            $constructor->addComment(implode("\n", $constructorComment));
         }
         $constructor->addBody($constructorBody);
         $serializableArray = "return [\n" . $serializableArrayBody . "];";
