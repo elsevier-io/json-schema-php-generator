@@ -158,4 +158,23 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, arrayWithSize(atLeast(1)));
         assertThat($code, hasClassThatMatchesTheExample('MultipleProperties'));
     }
+
+    public function testCreatesClassWithOneRequiredAndOneOptionalProperty()
+    {
+        $schema = json_decode('{
+            "properties": {
+                "foo": {"type": "boolean"},
+                "bar": {"type": "string"}
+            },
+            "required": [
+                "foo"
+            ]
+        }');
+        $codeCreator = new CodeCreator('OneRequiredOneOptional', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('OneRequiredOneOptional'));
+    }
 }
