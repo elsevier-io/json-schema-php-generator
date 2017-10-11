@@ -48,9 +48,10 @@ class CodeCreator
         $constructorComment = [];
         $constructorBody = '';
         $serializableArrayBody = '';
+        $requiredProperties = isset($schema->required) ? $schema->required : [];
         foreach ($schema->properties as $propertyName => $propertyAttributes) {
             $property = $this->properties->create($propertyName, $propertyAttributes, $this->defaultClass, $this->defaultNamespace);
-            if ($property) {
+            if (in_array($propertyName, $requiredProperties)) {
                 $constructorBody.= $property->constructorBody();
                 $constructorComment[] = $property->constructorComment();
                 $constructor = $property->addConstructorParameter($constructor);
