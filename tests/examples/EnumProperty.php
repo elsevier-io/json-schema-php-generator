@@ -15,7 +15,8 @@ class EnumProperty implements \JsonSerializable
         $this->foo = $foo->getValue();
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return [
             'foo' => $this->foo,
         ];

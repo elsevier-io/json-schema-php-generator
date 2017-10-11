@@ -47,7 +47,7 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit --testdox",
-        "lint": "vendor/bin/phpcs --standard=PSR2 --exclude=Generic.Files.LineLength src/"
+        "lint": "vendor/bin/phpcs --standard=./ruleset.xml"
     },
     "bin": [
         "bin/php-json-schema-generate"

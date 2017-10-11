@@ -15,7 +15,8 @@ class StringProperty implements \JsonSerializable
         $this->foo = $foo;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return [
             'foo' => $this->foo,
         ];

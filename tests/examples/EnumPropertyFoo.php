@@ -2,7 +2,8 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
-class EnumPropertyFoo {
+class EnumPropertyFoo
+{
     const Foo = 'Foo';
     const Bar = 'Bar';
 

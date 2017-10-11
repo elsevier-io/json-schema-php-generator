@@ -2,6 +2,7 @@
 
 use Elsevier\JSONSchemaPHPGenerator\Tests\Matchers\GeneratedCodeExampleMatcher;
 
-function hasClassThatMatchesTheExample($filename) {
+function hasClassThatMatchesTheExample($filename)
+{
     return new GeneratedCodeExampleMatcher($filename);
 }

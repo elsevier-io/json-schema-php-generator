@@ -12,7 +12,8 @@ class EnumPropertyWithSingleValue implements \JsonSerializable
         $this->foo = 'Bar';
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return [
             'foo' => $this->foo,
         ];

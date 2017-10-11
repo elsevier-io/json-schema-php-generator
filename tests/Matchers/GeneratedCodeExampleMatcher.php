@@ -36,14 +36,16 @@ class GeneratedCodeExampleMatcher extends BaseMatcher
         $description->appendText('was ')->appendValue($this->removeWhiteSpace($item[$this->className]));
     }
 
-    private function getExample($exampleName) {
+    private function getExample($exampleName)
+    {
         $localFiles = new Local(__DIR__ . '/../examples/');
         $examples = new Filesystem($localFiles);
         $example = $this->removeWhiteSpace($examples->read($exampleName));
         return substr($example, 5);
     }
 
-    private function removeWhiteSpace($code) {
+    private function removeWhiteSpace($code)
+    {
         return preg_replace('/\s+/', '', $code);
     }
 }

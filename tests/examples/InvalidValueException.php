@@ -2,4 +2,6 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
-class InvalidValueException extends \Exception {}
+class InvalidValueException extends \Exception
+{
+}

@@ -11,7 +11,8 @@ use League\Flysystem\Filesystem;
 
 class GeneratorTest extends \PHPUnit\Framework\TestCase
 {
-    public function testEmptySchemaCreatesNoFiles() {
+    public function testEmptySchemaCreatesNoFiles()
+    {
         $fileSystem = $this->createFilesystem();
         $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
         $generator = new Generator($fileSystem, $codeCreator);
@@ -21,7 +22,8 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         assertThat($fileSystem->listContents(), is([]));
     }
 
-    public function testBasicSchemaCreatesOneClassFile() {
+    public function testBasicSchemaCreatesOneClassFile()
+    {
         $schema = '{
             "properties": {
                 "foo": {"type": "integer"},
@@ -37,7 +39,8 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         assertThat($fileSystem->has('FooBar.php'), is(true));
     }
 
-    public function testInvalidJsonThrowsException() {
+    public function testInvalidJsonThrowsException()
+    {
         $schema = '{';
         $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
         $generator = new Generator($this->createFilesystem(), $codeCreator);
@@ -46,7 +49,8 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         $generator->generate($schema);
     }
 
-    public function testInvalidJsonSchemaThrowsException() {
+    public function testInvalidJsonSchemaThrowsException()
+    {
         $schema = '{
             "properties": {
                 "Baz": "invalid"
@@ -63,7 +67,8 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
      * @param string $rootDir
      * @return Filesystem
      */
-    public function createFilesystem($rootDir = '/tmp/outputDir/') {
+    public function createFilesystem($rootDir = '/tmp/outputDir/')
+    {
         $localFiles = new Local($rootDir);
         return new Filesystem($localFiles);
     }
@@ -71,7 +76,8 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * @after
      */
-    public function cleanOutOutputDir() {
+    public function cleanOutOutputDir()
+    {
         $fileSystem = $this->createFilesystem();
         $files = $fileSystem->listContents();
         foreach ($files as $file) {

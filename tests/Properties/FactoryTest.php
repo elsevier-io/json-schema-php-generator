@@ -13,7 +13,8 @@ use Elsevier\JSONSchemaPHPGenerator\Properties\UntypedProperty;
 class FactoryTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testWithNoTypeReturnsUntypedProperty() {
+    public function testWithNoTypeReturnsUntypedProperty()
+    {
         $attributes = json_decode('{}');
 
         $factory = new Factory();
@@ -22,7 +23,8 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         assertThat($property, is(anInstanceOf(UntypedProperty::class)));
     }
 
-    public function testNumberReturnsIntegerProperty() {
+    public function testNumberReturnsIntegerProperty()
+    {
         $attributes = json_decode('{ "type": "number"}');
 
         $factory = new Factory();
@@ -31,7 +33,8 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         assertThat($property, is(anInstanceOf(IntegerProperty::class)));
     }
 
-    public function testStringReturnsStringProperty() {
+    public function testStringReturnsStringProperty()
+    {
         $attributes = json_decode('{ "type": "string"}');
 
         $factory = new Factory();
@@ -40,7 +43,8 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         assertThat($property, is(anInstanceOf(StringProperty::class)));
     }
 
-    public function testBooleanReturnsBooleanProperty() {
+    public function testBooleanReturnsBooleanProperty()
+    {
         $attributes = json_decode('{ "type": "boolean"}');
 
         $factory = new Factory();
@@ -49,14 +53,16 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         assertThat($property, is(anInstanceOf(BooleanProperty::class)));
     }
 
-    public function testSingleValueEnumReturnsConstantProperty() {
+    public function testSingleValueEnumReturnsConstantProperty()
+    {
         $attributes = json_decode(
-    '{
-            "enum": [
-                "Bar"
-            ],
-            "type": "string"
-        }');
+            '{
+                "enum": [
+                    "Bar"
+                ],
+                "type": "string"
+            }'
+        );
 
         $factory = new Factory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
@@ -64,15 +70,17 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         assertThat($property, is(anInstanceOf(ConstantProperty::class)));
     }
 
-    public function testMultiValueEnumReturnsConstantProperty() {
+    public function testMultiValueEnumReturnsConstantProperty()
+    {
         $attributes = json_decode(
-    '{
-            "enum": [
-                "Foo",
-                "Bar"
-            ],
-            "type": "string"
-        }');
+            '{
+                "enum": [
+                    "Foo",
+                    "Bar"
+                ],
+                "type": "string"
+            }'
+        );
 
         $factory = new Factory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');

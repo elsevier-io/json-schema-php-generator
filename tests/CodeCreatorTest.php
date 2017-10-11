@@ -3,8 +3,6 @@
 namespace Elsevier\JSONSchemaPHPGenerator\Tests;
 
 use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
 
 class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 {
@@ -137,5 +135,4 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, arrayWithSize(3));
         assertThat($code, hasClassThatMatchesTheExample('InvalidValueException'));
     }
-
 }
