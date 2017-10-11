@@ -30,5 +30,6 @@ class Factory
         } elseif ($attributes->type === 'boolean') {
             return new BooleanProperty($name);
         }
+        return new UntypedProperty();
     }
 }

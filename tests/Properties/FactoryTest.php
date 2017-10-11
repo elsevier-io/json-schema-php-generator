@@ -23,6 +23,16 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         assertThat($property, is(anInstanceOf(UntypedProperty::class)));
     }
 
+    public function testWithInvalidTypeReturnsUntypedProperty()
+    {
+        $attributes = json_decode('{ "type": "integer" }');
+
+        $factory = new Factory();
+        $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
+
+        assertThat($property, is(anInstanceOf(UntypedProperty::class)));
+    }
+
     public function testNumberReturnsIntegerProperty()
     {
         $attributes = json_decode('{ "type": "number"}');
