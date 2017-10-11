@@ -40,7 +40,7 @@ class ConstantProperty extends ScalarProperty
     /**
      * @inheritdoc
      */
-    public function addConstructorParameter(Method $constructor)
+    public function addParameterTo(Method $constructor)
     {
         return $constructor;
     }

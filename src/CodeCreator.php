@@ -47,27 +47,21 @@ class CodeCreator
         $constructor = $class->addMethod('__construct');
         $constructorComment = [];
         $constructorBody = '';
-        $serializableArrayBody = '';
+        $serializableRequiredProperties = '';
         $serializableOptionalProperties = '';
         foreach ($schema->properties as $propertyName => $propertyAttributes) {
             $property = $this->properties->create($propertyName, $propertyAttributes, $this->defaultClass, $this->defaultNamespace);
             if ($this->isRequired($propertyName, $schema)) {
                 $constructorBody.= $property->constructorBody();
                 $constructorComment[] = $property->constructorComment();
-                $constructor = $property->addConstructorParameter($constructor);
+                $constructor = $property->addParameterTo($constructor);
                 $class = $property->addTo($class);
-                $serializableArrayBody.= $property->serializingCode();
+                $serializableRequiredProperties.= $property->serializingCode();
                 $classes = array_merge($classes, $property->extraClasses($this));
             } else {
                 $class = $property->addTo($class);
-                $class->addMethod('set' . ucfirst($propertyName))
-                    ->addComment($property->setterComment())
-                    ->addBody("\$this->$propertyName = \$value;")
-                    ->addParameter('value');
-                $serializableOptionalProperties.= "
-                    if (\$this->$propertyName) {\n
-                        \$values['$propertyName'] = \$this->$propertyName;\n
-                    }\n";
+                $property->addSetterTo($class);
+                $serializableOptionalProperties.= $property->optionalSerializingCode();
             }
         }
         $constructorComment = array_filter($constructorComment, function ($comment) {
@@ -78,11 +72,11 @@ class CodeCreator
         }
         $constructor->addBody($constructorBody);
         if (!empty($serializableOptionalProperties)) {
-            $serializableMethodBody = "\$values = [\n" . $serializableArrayBody . "];\n";
+            $serializableMethodBody = "\$values = [\n" . $serializableRequiredProperties . "];\n";
             $serializableMethodBody.= $serializableOptionalProperties;
             $serializableMethodBody.= "return \$values;\n";
         } else {
-            $serializableMethodBody = "return [\n" . $serializableArrayBody . "];";
+            $serializableMethodBody = "return [\n" . $serializableRequiredProperties . "];";
         }
         $class->addMethod('jsonSerialize')
             ->addBody($serializableMethodBody);

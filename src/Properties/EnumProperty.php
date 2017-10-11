@@ -47,7 +47,7 @@ class EnumProperty implements Property
     /**
      * @inheritdoc
      */
-    public function addConstructorParameter(Method $constructor)
+    public function addParameterTo(Method $constructor)
     {
         $constructor->addParameter($this->name)
             ->setTypeHint($this->defaultNamespace . '\\' . $this->enumName);
@@ -92,6 +92,17 @@ class EnumProperty implements Property
     /**
      * @inheritdoc
      */
+    public function optionalSerializingCode()
+    {
+        return "
+            if (\$this->$this->name) {\n
+                \$values['$this->name'] = \$this->$this->name;\n
+            }\n";
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function extraClasses(CodeCreator $code)
     {
         $classes[$this->enumName] = $code->createEnum($this->enumName, $this->values);
@@ -102,8 +113,12 @@ class EnumProperty implements Property
     /**
      * @inheritdoc
      */
-    public function setterComment()
+    public function addSetterTo(ClassType $class)
     {
-        return "@param $this->enumName \$value";
+        $class->addMethod('set' . ucfirst($this->name))
+            ->addComment("@param $this->enumName \$value")
+            ->addBody("\$this->$this->name = \$value;")
+            ->addParameter('value');
+        return $class;
     }
 }
