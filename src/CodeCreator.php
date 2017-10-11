@@ -80,7 +80,7 @@ class CodeCreator
         $namespace = new PhpNamespace($this->defaultNamespace);
         $class = $namespace->addClass($className);
         foreach ($values as $value) {
-            $class->addConst(ucfirst($value), $value);
+            $class->addConst(strtoupper($value), $value);
         }
         $class->addProperty('value')
             ->setVisibility('private')
@@ -90,7 +90,7 @@ class CodeCreator
         $constructorComment.= "@throws InvalidValueException";
 
         $constants = array_map(function ($constant) {
-            return 'self::' . ucfirst($constant);
+            return 'self::' . strtoupper($constant);
         }, $values);
         $constructorBody = ' $possibleValues = [' . implode(', ', $constants) . '];
             if (!in_array($value, $possibleValues)) {

@@ -4,8 +4,8 @@ namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
 class EnumPropertyFoo
 {
-    const Foo = 'Foo';
-    const Bar = 'Bar';
+    const FOO = 'Foo';
+    const BAR = 'Bar';
 
     /** @var string */
     private $value;
@@ -16,7 +16,7 @@ class EnumPropertyFoo
      */
     public function __construct($value)
     {
-        $possibleValues = [self::Foo, self::Bar];
+        $possibleValues = [self::FOO, self::BAR];
         if (!in_array($value, $possibleValues)) {
             throw new InvalidValueException($value . ' is not an allowed value for EnumPropertyFoo');
         }
