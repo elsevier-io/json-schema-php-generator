@@ -48,16 +48,26 @@ class CodeCreator
         $constructorComment = [];
         $constructorBody = '';
         $serializableArrayBody = '';
-        $requiredProperties = isset($schema->required) ? $schema->required : [];
+        $serializableOptionalProperties = '';
         foreach ($schema->properties as $propertyName => $propertyAttributes) {
             $property = $this->properties->create($propertyName, $propertyAttributes, $this->defaultClass, $this->defaultNamespace);
-            if (in_array($propertyName, $requiredProperties)) {
+            if ($this->isRequired($propertyName, $schema)) {
                 $constructorBody.= $property->constructorBody();
                 $constructorComment[] = $property->constructorComment();
                 $constructor = $property->addConstructorParameter($constructor);
                 $class = $property->addTo($class);
                 $serializableArrayBody.= $property->serializingCode();
                 $classes = array_merge($classes, $property->extraClasses($this));
+            } else {
+                $class = $property->addTo($class);
+                $class->addMethod('set' . ucfirst($propertyName))
+                    ->addComment($property->setterComment())
+                    ->addBody("\$this->$propertyName = \$value;")
+                    ->addParameter('value');
+                $serializableOptionalProperties.= "
+                    if (\$this->$propertyName) {\n
+                        \$values['$propertyName'] = \$this->$propertyName;\n
+                    }\n";
             }
         }
         $constructorComment = array_filter($constructorComment, function ($comment) {
@@ -67,11 +77,23 @@ class CodeCreator
             $constructor->addComment(implode("\n", $constructorComment));
         }
         $constructor->addBody($constructorBody);
-        $serializableArray = "return [\n" . $serializableArrayBody . "];";
+        if (!empty($serializableOptionalProperties)) {
+            $serializableMethodBody = "\$values = [\n" . $serializableArrayBody . "];\n";
+            $serializableMethodBody.= $serializableOptionalProperties;
+            $serializableMethodBody.= "return \$values;\n";
+        } else {
+            $serializableMethodBody = "return [\n" . $serializableArrayBody . "];";
+        }
         $class->addMethod('jsonSerialize')
-            ->addBody($serializableArray);
+            ->addBody($serializableMethodBody);
         $classes[$this->defaultClass] = $namespace;
         return $classes;
+    }
+
+    private function isRequired($property, $schema)
+    {
+        $requiredProperties = isset($schema->required) ? $schema->required : [];
+        return in_array($property, $requiredProperties);
     }
 
     /**

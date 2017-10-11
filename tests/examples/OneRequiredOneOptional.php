@@ -29,7 +29,7 @@ class OneRequiredOneOptional implements \JsonSerializable
     public function jsonSerialize()
     {
         $values = [
-            'foo' => $this->foo
+            'foo' => $this->foo,
         ];
         if ($this->bar) {
             $values['bar'] = $this->bar;

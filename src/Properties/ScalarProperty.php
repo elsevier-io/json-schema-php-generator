@@ -78,4 +78,12 @@ class ScalarProperty implements Property
     {
         return [];
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function setterComment()
+    {
+        return '@param ' . $this->type . ' $value';
+    }
 }

@@ -2,6 +2,7 @@
 
 - Add custom CS ruleset, including linting of test files
 - Add support for objects with multiple properties
+- Add support for required and optional properties
 
 == Version 0.3.0 ==
 

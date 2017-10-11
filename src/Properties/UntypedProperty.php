@@ -56,4 +56,12 @@ class UntypedProperty implements Property
     {
         return [];
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function setterComment()
+    {
+        return '';
+    }
 }

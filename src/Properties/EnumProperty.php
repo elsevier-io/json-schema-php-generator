@@ -98,4 +98,12 @@ class EnumProperty implements Property
         $classes['InvalidValueException'] = $code->createException('InvalidValueException');
         return $classes;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function setterComment()
+    {
+        return "@param $this->enumName \$value";
+    }
 }

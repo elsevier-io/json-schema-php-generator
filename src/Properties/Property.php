@@ -40,4 +40,9 @@ interface Property
      * @return array
      */
     public function extraClasses(CodeCreator $code);
+
+    /**
+     * @return string
+     */
+    public function setterComment();
 }
