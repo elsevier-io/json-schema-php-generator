@@ -76,10 +76,9 @@ class ScalarProperty implements Property
      */
     public function optionalSerializingCode()
     {
-        return "
-            if (\$this->$this->name) {\n
-                \$values['$this->name'] = \$this->$this->name;\n
-            }\n";
+        return "if (\$this->$this->name) {\n" .
+            "   \$values['$this->name'] = \$this->$this->name;\n" .
+            "}\n";
     }
 
     /**
