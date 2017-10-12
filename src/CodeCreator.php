@@ -43,7 +43,11 @@ class CodeCreator
         $classes = $this->createClass($schema, $this->defaultClass);
         $references = isset($schema->definitions) ? $schema->definitions : [];
         foreach ($references as $className => $classDefinition) {
-            $classes = array_merge($classes, $this->createClass($classDefinition, $className));
+            if (isset($classDefinition->type) && $classDefinition->type === 'object') {
+                $classes = array_merge($classes, $this->createClass($classDefinition, $className));
+            } else {
+                $classes[$className] = $this->createEnum($className, $classDefinition->enum);
+            }
         }
         return $classes;
     }
@@ -76,11 +80,12 @@ class CodeCreator
         $constants = array_map(function ($constant) {
             return 'self::' . strtoupper($constant);
         }, $values);
-        $constructorBody = ' $possibleValues = [' . implode(', ', $constants) . '];
-            if (!in_array($value, $possibleValues)) {
-                throw new InvalidValueException($value . \' is not an allowed value for EnumPropertyFoo\');
-            }
-            $this->value = $value;';
+        $constantsList = implode(', ', $constants);
+        $constructorBody = " \$possibleValues = [$constantsList];\n" .
+            "if (!in_array(\$value, \$possibleValues)) {\n" .
+            "   throw new InvalidValueException(\$value . ' is not an allowed value for EnumPropertyFoo');\n" .
+            "}\n" .
+            "\$this->value = \$value;";
 
         $constructor = $class->addMethod('__construct')
                             ->addComment($constructorComment)

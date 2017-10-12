@@ -246,7 +246,36 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                     },
                     "required": [
                         "foo"
-                    ]
+                    ],
+                    "type": "object"
+                }
+            },
+            "properties": {
+                "bar": {"$ref": "#/definitions/SubReferenceEnum"}
+            },
+            "type": "object",
+            "required": [
+                "bar"
+            ]
+        }');
+        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('SubReferenceEnumFoo'));
+    }
+
+    public function testWithNamedEnumProperty()
+    {
+        $schema = json_decode('{
+            "definitions": {
+                "SubReferenceEnumFoo": {
+                    "enum": [
+                        "Foo",
+                        "Bar"
+                    ],
+                    "type": "string"
                 }
             },
             "properties": {
