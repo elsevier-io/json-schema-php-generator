@@ -83,7 +83,7 @@ class CodeCreator
         $constantsList = implode(', ', $constants);
         $constructorBody = " \$possibleValues = [$constantsList];\n" .
             "if (!in_array(\$value, \$possibleValues)) {\n" .
-            "   throw new InvalidValueException(\$value . ' is not an allowed value for EnumPropertyFoo');\n" .
+            "   throw new InvalidValueException(\$value . ' is not an allowed value for $className');\n" .
             "}\n" .
             "\$this->value = \$value;";
 

@@ -18,7 +18,7 @@ class SubReferenceEnumFoo
     {
         $possibleValues = [self::FOO, self::BAR];
         if (!in_array($value, $possibleValues)) {
-            throw new InvalidValueException($value . ' is not an allowed value for EnumPropertyFoo');
+            throw new InvalidValueException($value . ' is not an allowed value for SubReferenceEnumFoo');
         }
         $this->value = $value;
     }
