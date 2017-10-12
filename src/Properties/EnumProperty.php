@@ -86,7 +86,7 @@ class EnumProperty implements Property
      */
     public function serializingCode()
     {
-        return "    '" . $this->name . "'=>" . '$this->' . $this->name . ",\n";
+        return "    '" . $this->name . "' => " . '$this->' . $this->name . ",\n";
     }
 
     /**
