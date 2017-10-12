@@ -38,4 +38,3 @@ class ClassWithTwoSubRefs implements \JsonSerializable
         return $values;
     }
 }
-
