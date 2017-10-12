@@ -15,7 +15,7 @@ class ScalarProperty implements Property
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @param string $name
@@ -68,7 +68,7 @@ class ScalarProperty implements Property
      */
     public function serializingCode()
     {
-        return "    '" . $this->name . "'=>" . '$this->' . $this->name . ",\n";
+        return "    '" . $this->name . "' => " . '$this->' . $this->name . ",\n";
     }
 
     /**
@@ -76,10 +76,9 @@ class ScalarProperty implements Property
      */
     public function optionalSerializingCode()
     {
-        return "
-            if (\$this->$this->name) {\n
-                \$values['$this->name'] = \$this->$this->name;\n
-            }\n";
+        return "if (\$this->$this->name) {\n" .
+            "   \$values['$this->name'] = \$this->$this->name;\n" .
+            "}\n";
     }
 
     /**

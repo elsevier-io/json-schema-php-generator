@@ -86,7 +86,7 @@ class EnumProperty implements Property
      */
     public function serializingCode()
     {
-        return "    '" . $this->name . "'=>" . '$this->' . $this->name . ",\n";
+        return "    '" . $this->name . "' => " . '$this->' . $this->name . ",\n";
     }
 
     /**
@@ -94,10 +94,9 @@ class EnumProperty implements Property
      */
     public function optionalSerializingCode()
     {
-        return "
-            if (\$this->$this->name) {\n
-                \$values['$this->name'] = \$this->$this->name;\n
-            }\n";
+        return "if (\$this->$this->name) {\n" .
+            "   \$values['$this->name'] = \$this->$this->name;\n" .
+            "}\n";
     }
 
     /**
@@ -117,8 +116,9 @@ class EnumProperty implements Property
     {
         $class->addMethod('set' . ucfirst($this->name))
             ->addComment("@param $this->enumName \$value")
-            ->addBody("\$this->$this->name = \$value;")
-            ->addParameter('value');
+            ->addBody("\$this->$this->name = \$value->getValue();")
+            ->addParameter('value')
+            ->setTypeHint($this->defaultNamespace . '\\' . $this->enumName);
         return $class;
     }
 }

@@ -42,11 +42,12 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('StringProperty'));
     }
     
-    public function testCreatesClassWithBooleanProperty()
+    public function testCreatesClassWithRequiredAndOptionalBooleanProperties()
     {
         $schema = json_decode('{
             "properties": {
-                "foo": {"type": "boolean"}
+                "foo": {"type": "boolean"},
+                "bar": {"type": "boolean"}
             },
             "required": [
                 "foo"
@@ -83,11 +84,18 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('EnumPropertyWithSingleValue'));
     }
 
-    public function testWithEnumPropertyCreatesTargetClass()
+    public function testWithRequiredAndOptionalEnumPropertiesCreatesTargetClass()
     {
         $schema = json_decode('{
             "properties": {
                 "foo": {
+                    "enum": [
+                        "Foo",
+                        "Bar"
+                    ],
+                    "type": "string"
+                },
+                "bar": {
                     "enum": [
                         "Foo",
                         "Bar"
@@ -185,22 +193,102 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('MultipleProperties'));
     }
 
-    public function testCreatesClassWithOneRequiredAndOneOptionalProperty()
+    public function testCreatesTwoClassesForClassWithRequiredAndOptionalSubRefsDefined()
     {
         $schema = json_decode('{
-            "properties": {
-                "foo": {"type": "boolean"},
-                "bar": {"type": "string"}
+            "definitions": {
+                "SubReference": {
+                    "properties": {
+                        "foobar": {"type": "string"},
+                        "baz": {"type": "boolean"}
+                    },
+                    "required": [
+                        "foobar",
+                        "baz"
+                    ],
+                    "type": "object"
+                }
             },
+            "properties": {
+                "bar": {"$ref": "#/definitions/SubReference"},
+                "baz": {"$ref": "#/definitions/SubReference"}
+            },
+            "type": "object",
             "required": [
-                "foo"
+                "bar"
             ]
         }');
-        $codeCreator = new CodeCreator('OneRequiredOneOptional', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $codeCreator = new CodeCreator('ClassWithTwoSubRefs', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(2)));
+        assertThat($code, hasClassThatMatchesTheExample('ClassWithTwoSubRefs'));
+        assertThat($code, hasClassThatMatchesTheExample('SubReference'));
+    }
+
+    public function testWithEnumPropertyInReferenceClassCreatesEnumClass()
+    {
+        $schema = json_decode('{
+            "definitions": {
+                "SubReferenceEnum": {
+                    "properties": {
+                        "foo": {
+                            "enum": [
+                                "Foo",
+                                "Bar"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "foo"
+                    ],
+                    "type": "object"
+                }
+            },
+            "properties": {
+                "bar": {"$ref": "#/definitions/SubReferenceEnum"}
+            },
+            "type": "object",
+            "required": [
+                "bar"
+            ]
+        }');
+        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(atLeast(1)));
-        assertThat($code, hasClassThatMatchesTheExample('OneRequiredOneOptional'));
+        assertThat($code, hasClassThatMatchesTheExample('SubReferenceEnumFoo'));
+    }
+
+    public function testWithNamedEnumProperty()
+    {
+        $schema = json_decode('{
+            "definitions": {
+                "SubReferenceEnumFoo": {
+                    "enum": [
+                        "Foo",
+                        "Bar"
+                    ],
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "bar": {"$ref": "#/definitions/SubReferenceEnum"}
+            },
+            "type": "object",
+            "required": [
+                "bar"
+            ]
+        }');
+        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('SubReferenceEnumFoo'));
     }
 }

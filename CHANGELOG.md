@@ -1,3 +1,10 @@
+== Version 0.5.0 ==
+
+- Add support for reference properties and object definitions
+- Ensure all property types supported as optional properties
+- Add support for named enums
+- Minor spacing and naming fixes
+
 == Version 0.4.0 ==
 
 - Add custom CS ruleset, including linting of test files
