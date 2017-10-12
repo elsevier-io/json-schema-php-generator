@@ -229,4 +229,39 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('ClassWithTwoSubRefs'));
         assertThat($code, hasClassThatMatchesTheExample('SubReference'));
     }
+
+    public function testWithEnumPropertyInReferenceClassCreatesEnumClass()
+    {
+        $schema = json_decode('{
+            "definitions": {
+                "SubReferenceEnum": {
+                    "properties": {
+                        "foo": {
+                            "enum": [
+                                "Foo",
+                                "Bar"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "foo"
+                    ]
+                }
+            },
+            "properties": {
+                "bar": {"$ref": "#/definitions/SubReferenceEnum"}
+            },
+            "type": "object",
+            "required": [
+                "bar"
+            ]
+        }');
+        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('SubReferenceEnumFoo'));
+    }
 }

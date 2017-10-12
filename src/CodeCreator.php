@@ -120,7 +120,7 @@ class CodeCreator
         $serializableRequiredProperties = '';
         $serializableOptionalProperties = '';
         foreach ($schema->properties as $propertyName => $propertyAttributes) {
-            $property = $this->properties->create($propertyName, $propertyAttributes, $this->defaultClass, $this->defaultNamespace);
+            $property = $this->properties->create($propertyName, $propertyAttributes, $className, $this->defaultNamespace);
             if ($this->isRequired($propertyName, $schema)) {
                 $constructorBody .= $property->constructorBody();
                 $constructorComment[] = $property->constructorComment();
