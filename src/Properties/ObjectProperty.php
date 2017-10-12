@@ -2,6 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 
+use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
 class ObjectProperty extends ScalarProperty
@@ -29,5 +30,18 @@ class ObjectProperty extends ScalarProperty
         $constructor->addParameter($this->name)
             ->setTypeHint($this->namespace . '\\' . $this->type);
         return $constructor;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addSetterTo(ClassType $class)
+    {
+        $class->addMethod('set' . ucfirst($this->name))
+            ->addComment('@param ' . $this->type . ' $value')
+            ->addBody("\$this->$this->name = \$value;")
+            ->addParameter('value')
+            ->setTypeHint($this->namespace . '\\' . $this->type);
+        return $class;
     }
 }

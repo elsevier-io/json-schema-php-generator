@@ -42,11 +42,12 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('StringProperty'));
     }
     
-    public function testCreatesClassWithBooleanProperty()
+    public function testCreatesClassWithRequiredAndOptionalBooleanProperties()
     {
         $schema = json_decode('{
             "properties": {
-                "foo": {"type": "boolean"}
+                "foo": {"type": "boolean"},
+                "bar": {"type": "boolean"}
             },
             "required": [
                 "foo"
@@ -83,11 +84,18 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('EnumPropertyWithSingleValue'));
     }
 
-    public function testWithEnumPropertyCreatesTargetClass()
+    public function testWithRequiredAndOptionalEnumPropertiesCreatesTargetClass()
     {
         $schema = json_decode('{
             "properties": {
                 "foo": {
+                    "enum": [
+                        "Foo",
+                        "Bar"
+                    ],
+                    "type": "string"
+                },
+                "bar": {
                     "enum": [
                         "Foo",
                         "Bar"
@@ -185,26 +193,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('MultipleProperties'));
     }
 
-    public function testCreatesClassWithOneRequiredAndOneOptionalProperty()
-    {
-        $schema = json_decode('{
-            "properties": {
-                "foo": {"type": "boolean"},
-                "bar": {"type": "string"}
-            },
-            "required": [
-                "foo"
-            ]
-        }');
-        $codeCreator = new CodeCreator('OneRequiredOneOptional', 'Elsevier\JSONSchemaPHPGenerator\Examples');
-
-        $code = $codeCreator->create($schema);
-
-        assertThat($code, arrayWithSize(atLeast(1)));
-        assertThat($code, hasClassThatMatchesTheExample('OneRequiredOneOptional'));
-    }
-
-    public function testCreatesTwoClassesForClassWithSubRefDefined()
+    public function testCreatesTwoClassesForClassWithRequiredAndOptionalSubRefsDefined()
     {
         $schema = json_decode('{
             "definitions": {
@@ -222,7 +211,8 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
             },
             "properties": {
                 "foo": {"type": "boolean"},
-                "bar": {"$ref": "#/definitions/SubReference"}
+                "bar": {"$ref": "#/definitions/SubReference"},
+                "baz": {"$ref": "#/definitions/SubReference"}
             },
             "type": "object",
             "required": [
@@ -231,12 +221,12 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
             ]
         }');
 
-        $codeCreator = new CodeCreator('ClassWithOneSubRef', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = new CodeCreator('ClassWithTwoSubRefs', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(atLeast(2)));
-        assertThat($code, hasClassThatMatchesTheExample('ClassWithOneSubRef'));
+        assertThat($code, hasClassThatMatchesTheExample('ClassWithTwoSubRefs'));
         assertThat($code, hasClassThatMatchesTheExample('SubReference'));
     }
 }

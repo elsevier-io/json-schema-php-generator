@@ -116,8 +116,9 @@ class EnumProperty implements Property
     {
         $class->addMethod('set' . ucfirst($this->name))
             ->addComment("@param $this->enumName \$value")
-            ->addBody("\$this->$this->name = \$value;")
-            ->addParameter('value');
+            ->addBody("\$this->$this->name = \$value->getValue();")
+            ->addParameter('value')
+            ->setTypeHint($this->defaultNamespace . '\\' . $this->enumName);
         return $class;
     }
 }

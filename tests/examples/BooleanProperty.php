@@ -6,6 +6,8 @@ class BooleanProperty implements \JsonSerializable
 {
     /** @var boolean */
     private $foo;
+    /** @var boolean */
+    private $bar;
 
     /**
      * @param boolean $foo
@@ -15,10 +17,22 @@ class BooleanProperty implements \JsonSerializable
         $this->foo = $foo;
     }
 
+    /**
+     * @param boolean $value
+     */
+    public function setBar($value)
+    {
+        $this->bar = $value;
+    }
+
     public function jsonSerialize()
     {
-        return [
+        $values = [
             'foo' => $this->foo,
         ];
+        if ($this->bar) {
+            $values['bar'] = $this->bar;
+        }
+        return $values;
     }
 }

@@ -6,6 +6,8 @@ class EnumProperty implements \JsonSerializable
 {
     /** @var string */
     private $foo;
+    /** @var string */
+    private $bar;
 
     /**
      * @param EnumPropertyFoo $foo
@@ -15,10 +17,22 @@ class EnumProperty implements \JsonSerializable
         $this->foo = $foo->getValue();
     }
 
+    /**
+     * @param EnumPropertyBar $value
+     */
+    public function setBar(EnumPropertyBar $value)
+    {
+        $this->bar = $value->getValue();
+    }
+
     public function jsonSerialize()
     {
-        return [
+        $values = [
             'foo' => $this->foo,
         ];
+        if ($this->bar) {
+            $values['bar'] = $this->bar;
+        }
+        return $values;
     }
 }
