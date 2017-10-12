@@ -4,9 +4,6 @@ namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
 class ClassWithTwoSubRefs implements \JsonSerializable
 {
-    /** @var boolean */
-    private $foo;
-
     /** @var SubReference */
     private $bar;
 
@@ -14,12 +11,10 @@ class ClassWithTwoSubRefs implements \JsonSerializable
     private $baz;
 
     /**
-     * @param boolean $foo
      * @param SubReference $bar
      */
-    public function __construct($foo, SubReference $bar)
+    public function __construct(SubReference $bar)
     {
-        $this->foo = $foo;
         $this->bar = $bar;
     }
 
@@ -35,7 +30,6 @@ class ClassWithTwoSubRefs implements \JsonSerializable
     public function jsonSerialize()
     {
         $values = [
-            'foo' => $this->foo,
             'bar' => $this->bar,
         ];
         if ($this->baz) {

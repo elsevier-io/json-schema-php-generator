@@ -210,13 +210,11 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 }
             },
             "properties": {
-                "foo": {"type": "boolean"},
                 "bar": {"$ref": "#/definitions/SubReference"},
                 "baz": {"$ref": "#/definitions/SubReference"}
             },
             "type": "object",
             "required": [
-                "foo",
                 "bar"
             ]
         }');
