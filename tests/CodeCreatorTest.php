@@ -11,7 +11,10 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $schema = json_decode('{
             "properties": {
                 "foo": {"type": "number"}
-            }
+            },
+            "required": [
+                "foo"
+            ]
         }');
         $codeCreator = new CodeCreator('IntegerProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
@@ -26,7 +29,10 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $schema = json_decode('{
             "properties": {
                 "foo": {"type": "string"}
-            }
+            },
+            "required": [
+                "foo"
+            ]
         }');
         $codeCreator = new CodeCreator('StringProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
@@ -41,7 +47,10 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         $schema = json_decode('{
             "properties": {
                 "foo": {"type": "boolean"}
-            }
+            },
+            "required": [
+                "foo"
+            ]
         }');
         $codeCreator = new CodeCreator('BooleanProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
@@ -61,7 +70,10 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                     ],
                     "type": "string"
                 }
-            }
+            },
+            "required": [
+                "foo"
+            ]
         }');
         $codeCreator = new CodeCreator('EnumPropertyWithSingleValue', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
@@ -82,7 +94,10 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                     ],
                     "type": "string"
                 }
-            }
+            },
+            "required": [
+                "foo"
+            ]
         }');
         $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
@@ -105,7 +120,10 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                     ],
                     "type": "string"
                 }
-            }
+            },
+            "required": [
+                "foo"
+            ]
         }');
         $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
@@ -126,7 +144,10 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                     ],
                     "type": "string"
                 }
-            }
+            },
+            "required": [
+                "foo"
+            ]
         }');
         $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
@@ -134,5 +155,52 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 
         assertThat($code, arrayWithSize(3));
         assertThat($code, hasClassThatMatchesTheExample('InvalidValueException'));
+    }
+
+    public function testCreatesClassWithMultipleProperties()
+    {
+        $schema = json_decode('{
+            "properties": {
+                "bool": {"type": "boolean"},
+                "enum": {
+                    "enum": [
+                        "Bar",
+                        "Foo"
+                    ],
+                    "type": "string"
+                },
+                "string": {"type": "string"}
+            },
+            "required": [
+                "bool",
+                "enum",
+                "string"
+            ]
+        }');
+        $codeCreator = new CodeCreator('MultipleProperties', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('MultipleProperties'));
+    }
+
+    public function testCreatesClassWithOneRequiredAndOneOptionalProperty()
+    {
+        $schema = json_decode('{
+            "properties": {
+                "foo": {"type": "boolean"},
+                "bar": {"type": "string"}
+            },
+            "required": [
+                "foo"
+            ]
+        }');
+        $codeCreator = new CodeCreator('OneRequiredOneOptional', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('OneRequiredOneOptional'));
     }
 }

@@ -46,7 +46,7 @@ class ScalarProperty implements Property
     /**
      * @inheritdoc
      */
-    public function addConstructorParameter(Method $constructor)
+    public function addParameterTo(Method $constructor)
     {
         $constructor->addParameter($this->name);
         return $constructor;
@@ -74,8 +74,31 @@ class ScalarProperty implements Property
     /**
      * @inheritdoc
      */
+    public function optionalSerializingCode()
+    {
+        return "
+            if (\$this->$this->name) {\n
+                \$values['$this->name'] = \$this->$this->name;\n
+            }\n";
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function extraClasses(CodeCreator $code)
     {
         return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addSetterTo(ClassType $class)
+    {
+        $class->addMethod('set' . ucfirst($this->name))
+            ->addComment('@param ' . $this->type . ' $value')
+            ->addBody("\$this->$this->name = \$value;")
+            ->addParameter('value');
+        return $class;
     }
 }

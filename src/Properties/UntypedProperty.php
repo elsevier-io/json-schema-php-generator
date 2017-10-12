@@ -28,7 +28,7 @@ class UntypedProperty implements Property
     /**
      * @inheritdoc
      */
-    public function addConstructorParameter(Method $constructor)
+    public function addParameterTo(Method $constructor)
     {
         return $constructor;
     }
@@ -52,8 +52,24 @@ class UntypedProperty implements Property
     /**
      * @inheritdoc
      */
+    public function optionalSerializingCode()
+    {
+        return '';
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function extraClasses(CodeCreator $code)
     {
         return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addSetterTo(ClassType $class)
+    {
+        return $class;
     }
 }

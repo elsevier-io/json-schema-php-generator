@@ -12,7 +12,7 @@ interface Property
      * @param Method $constructor
      * @return Method
      */
-    public function addConstructorParameter(Method $constructor);
+    public function addParameterTo(Method $constructor);
 
     /**
      * @param ClassType $class
@@ -36,8 +36,19 @@ interface Property
     public function serializingCode();
 
     /**
+     * @return string
+     */
+    public function optionalSerializingCode();
+
+    /**
      * @param CodeCreator $code
      * @return array
      */
     public function extraClasses(CodeCreator $code);
+
+    /**
+     * @param ClassType $class
+     * @return ClassType
+     */
+    public function addSetterTo(ClassType $class);
 }

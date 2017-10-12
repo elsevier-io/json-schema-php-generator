@@ -27,13 +27,25 @@ class GeneratedCodeExampleMatcher extends BaseMatcher
 
     public function describeTo(Description $description)
     {
-        $description->appendText('Generated code to equal the expected sample code');
+        $description->appendText('Generated code to equal the expected sample code ');
         $description->appendValue($this->expectedCode);
     }
 
     public function describeMismatch($item, Description $description)
     {
-        $description->appendText('was ')->appendValue($this->removeWhiteSpace($item[$this->className]));
+        $actualText = $this->removeWhiteSpace($item[$this->className]);
+        $diff = false;
+        $char = 0;
+        while (!$diff && $char < strlen($this->expectedCode) && $char < strlen($actualText)) {
+            if ($actualText[$char] !== $this->expectedCode[$char]) {
+                $diff = true;
+                break;
+            }
+            $char++;
+        }
+        $mismatchedText = substr($actualText, $char, 50);
+        $description->appendText('differs at ')->appendValue($mismatchedText);
+        $description->appendText("\nactual text ")->appendValue($actualText);
     }
 
     private function getExample($exampleName)

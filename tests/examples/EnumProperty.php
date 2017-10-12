@@ -4,7 +4,7 @@ namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
 class EnumProperty implements \JsonSerializable
 {
-    /** @var EnumPropertyFoo */
+    /** @var string */
     private $foo;
 
     /**
