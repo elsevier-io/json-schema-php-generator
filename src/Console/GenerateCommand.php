@@ -15,6 +15,15 @@ use League\Flysystem\Filesystem;
 
 class GenerateCommand extends Command
 {
+    /**
+     * @var string
+     */
+    private $schemaDraftFileLocation;
+
+    public function setSchemaDraftFileLocation($schemaDraftFile)
+    {
+        $this->schemaDraftFileLocation = $schemaDraftFile;
+    }
 
     protected function configure()
     {
@@ -49,7 +58,7 @@ class GenerateCommand extends Command
         $output->writeln('Generating code in namespace ' . $defaultNamespace);
         $output->writeln('    with top-level class ' . $defaultClass);
         $codeCreator = new CodeCreator($defaultClass, $defaultNamespace);
-        $generator = new Generator($outputDir, $codeCreator);
+        $generator = new Generator($outputDir, $codeCreator, $this->schemaDraftFileLocation);
         $localFiles = new Local('.');
         $schemaDir = new Filesystem($localFiles);
 
