@@ -14,8 +14,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
     public function testEmptySchemaCreatesNoFiles()
     {
         $fileSystem = $this->createFilesystem();
-        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
-        $generator = new Generator($fileSystem, $codeCreator, __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
+        $generator = $this->buildGenerator($fileSystem);
 
         $generator->generate('{}');
 
@@ -31,8 +30,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
             }
         }';
         $fileSystem = $this->createFilesystem();
-        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
-        $generator = new Generator($fileSystem, $codeCreator, __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
+        $generator = $this->buildGenerator($fileSystem);
 
         $generator->generate($schema);
 
@@ -42,8 +40,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
     public function testInvalidJsonThrowsException()
     {
         $schema = '{';
-        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
-        $generator = new Generator($this->createFilesystem(), $codeCreator, __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
+        $generator = $this->buildGenerator();
 
         $this->setExpectedException(InvalidJsonException::class);
         $generator->generate($schema);
@@ -56,8 +53,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
                 "Baz": "invalid"
             }
         }';
-        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
-        $generator = new Generator($this->createFilesystem(), $codeCreator, __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
+        $generator = $this->buildGenerator();
 
         $this->setExpectedException(InvalidSchemaException::class);
         $generator->generate($schema);
@@ -83,5 +79,13 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         foreach ($files as $file) {
             $fileSystem->delete($file['path']);
         }
+    }
+
+    private function buildGenerator($fileSystem = null)
+    {
+        $fileSystem = isset($fileSystem) ? $fileSystem : $this->createFilesystem();
+        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $generator = new Generator($fileSystem, $codeCreator, __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
+        return $generator;
     }
 }
