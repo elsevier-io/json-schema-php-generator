@@ -1,10 +1,17 @@
 #!/usr/bin/env php
 <?php
 
-if (is_file(__DIR__.'/../autoload.php') === true) {
-    include_once __DIR__.'/../autoload.php';
-} elseif (is_file(__DIR__.'/../vendor/autoload.php') === true) {
-    include_once __DIR__.'/../vendor/autoload.php';
+$vendorDir = '';
+
+foreach (array(__DIR__ . '/../../../', __DIR__ . '/../vendor/', __DIR__ . '/vendor/') as $dir) {
+    if (file_exists($dir . 'autoload.php')) {
+        $vendorDir = $dir;
+        break;
+    }
+}
+
+if (is_file($vendorDir . 'autoload.php') === true) {
+    require $vendorDir . 'autoload.php';
 } else {
     throw new Exception('Cannot find autoloader');
 }
@@ -15,6 +22,7 @@ use Symfony\Component\Console\Application;
 $application = new Application();
 
 $command = new GenerateCommand();
+$command->setSchemaDraftFileLocation($vendorDir . 'justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
 $application->add($command);
 $application->setDefaultCommand($command->getName(), true);
 

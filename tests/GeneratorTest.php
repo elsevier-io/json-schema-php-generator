@@ -15,7 +15,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
     {
         $fileSystem = $this->createFilesystem();
         $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
-        $generator = new Generator($fileSystem, $codeCreator);
+        $generator = new Generator($fileSystem, $codeCreator, __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
 
         $generator->generate('{}');
 
@@ -32,7 +32,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         }';
         $fileSystem = $this->createFilesystem();
         $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
-        $generator = new Generator($fileSystem, $codeCreator);
+        $generator = new Generator($fileSystem, $codeCreator, __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
 
         $generator->generate($schema);
 
@@ -43,7 +43,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
     {
         $schema = '{';
         $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
-        $generator = new Generator($this->createFilesystem(), $codeCreator);
+        $generator = new Generator($this->createFilesystem(), $codeCreator, __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
 
         $this->setExpectedException(InvalidJsonException::class);
         $generator->generate($schema);
@@ -57,7 +57,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
             }
         }';
         $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
-        $generator = new Generator($this->createFilesystem(), $codeCreator);
+        $generator = new Generator($this->createFilesystem(), $codeCreator, __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
 
         $this->setExpectedException(InvalidSchemaException::class);
         $generator->generate($schema);

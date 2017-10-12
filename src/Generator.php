@@ -15,15 +15,21 @@ class Generator
      * @var CodeCreator
      */
     private $codeCreator;
+    /**
+     * @var string
+     */
+    private $schemaDraftFileLocation;
 
     /**
      * @param Filesystem $outputDir
      * @param CodeCreator $codeCreator
+     * @param string $schemaDraftFileLocation
      */
-    public function __construct(Filesystem $outputDir, CodeCreator $codeCreator)
+    public function __construct(Filesystem $outputDir, CodeCreator $codeCreator, $schemaDraftFileLocation)
     {
         $this->outputDir = $outputDir;
         $this->codeCreator = $codeCreator;
+        $this->schemaDraftFileLocation = $schemaDraftFileLocation;
     }
 
     /**
@@ -38,8 +44,7 @@ class Generator
             throw new InvalidJsonException('JSON Schema is invalid JSON.');
         }
         $validator = new Validator();
-        $schemaDraft4 = __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json';
-        $validator->validate($schema, (object)['$ref' => 'file://' . realpath($schemaDraft4)]);
+        $validator->validate($schema, (object)['$ref' => 'file://' . realpath($this->schemaDraftFileLocation)]);
 
         if (!$validator->isValid()) {
             throw new InvalidSchemaException('JSON Schema is invalid JSON.');
