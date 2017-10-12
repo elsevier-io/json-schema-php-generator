@@ -40,47 +40,11 @@ class CodeCreator
         if (!isset($schema->properties)) {
             return [];
         }
-        $classes = [];
-        $namespace = new PhpNamespace($this->defaultNamespace);
-        $class = $namespace->addClass($this->defaultClass)
-                        ->addImplement('\JsonSerializable');
-        $constructor = $class->addMethod('__construct');
-        $constructorComment = [];
-        $constructorBody = '';
-        $serializableRequiredProperties = '';
-        $serializableOptionalProperties = '';
-        foreach ($schema->properties as $propertyName => $propertyAttributes) {
-            $property = $this->properties->create($propertyName, $propertyAttributes, $this->defaultClass, $this->defaultNamespace);
-            if ($this->isRequired($propertyName, $schema)) {
-                $constructorBody.= $property->constructorBody();
-                $constructorComment[] = $property->constructorComment();
-                $constructor = $property->addParameterTo($constructor);
-                $class = $property->addTo($class);
-                $serializableRequiredProperties.= $property->serializingCode();
-                $classes = array_merge($classes, $property->extraClasses($this));
-            } else {
-                $class = $property->addTo($class);
-                $property->addSetterTo($class);
-                $serializableOptionalProperties.= $property->optionalSerializingCode();
-            }
+        $classes = $this->createClass($schema, $this->defaultClass);
+        $references = isset($schema->definitions) ? $schema->definitions : [];
+        foreach ($references as $className => $classDefinition) {
+            $classes = array_merge($classes, $this->createClass($classDefinition, $className));
         }
-        $constructorComment = array_filter($constructorComment, function ($comment) {
-            return !empty($comment);
-        });
-        if (!empty($constructorComment)) {
-            $constructor->addComment(implode("\n", $constructorComment));
-        }
-        $constructor->addBody($constructorBody);
-        if (!empty($serializableOptionalProperties)) {
-            $serializableMethodBody = "\$values = [\n" . $serializableRequiredProperties . "];\n";
-            $serializableMethodBody.= $serializableOptionalProperties;
-            $serializableMethodBody.= "return \$values;\n";
-        } else {
-            $serializableMethodBody = "return [\n" . $serializableRequiredProperties . "];";
-        }
-        $class->addMethod('jsonSerialize')
-            ->addBody($serializableMethodBody);
-        $classes[$this->defaultClass] = $namespace;
         return $classes;
     }
 
@@ -137,5 +101,56 @@ class CodeCreator
         $namespace->addClass($className)
             ->addExtend('\Exception');
         return $namespace;
+    }
+
+    /**
+     * @param mixed $schema
+     * @param string $className
+     * @return array
+     */
+    private function createClass($schema, $className)
+    {
+        $classes = [];
+        $namespace = new PhpNamespace($this->defaultNamespace);
+        $class = $namespace->addClass($className)
+            ->addImplement('\JsonSerializable');
+        $constructor = $class->addMethod('__construct');
+        $constructorComment = [];
+        $constructorBody = '';
+        $serializableRequiredProperties = '';
+        $serializableOptionalProperties = '';
+        foreach ($schema->properties as $propertyName => $propertyAttributes) {
+            $property = $this->properties->create($propertyName, $propertyAttributes, $this->defaultClass, $this->defaultNamespace);
+            if ($this->isRequired($propertyName, $schema)) {
+                $constructorBody .= $property->constructorBody();
+                $constructorComment[] = $property->constructorComment();
+                $constructor = $property->addParameterTo($constructor);
+                $class = $property->addTo($class);
+                $serializableRequiredProperties .= $property->serializingCode();
+                $classes = array_merge($classes, $property->extraClasses($this));
+            } else {
+                $class = $property->addTo($class);
+                $property->addSetterTo($class);
+                $serializableOptionalProperties .= $property->optionalSerializingCode();
+            }
+        }
+        $constructorComment = array_filter($constructorComment, function ($comment) {
+            return !empty($comment);
+        });
+        if (!empty($constructorComment)) {
+            $constructor->addComment(implode("\n", $constructorComment));
+        }
+        $constructor->addBody($constructorBody);
+        if (!empty($serializableOptionalProperties)) {
+            $serializableMethodBody = "\$values = [\n" . $serializableRequiredProperties . "];\n";
+            $serializableMethodBody .= $serializableOptionalProperties;
+            $serializableMethodBody .= "return \$values;\n";
+        } else {
+            $serializableMethodBody = "return [\n" . $serializableRequiredProperties . "];";
+        }
+        $class->addMethod('jsonSerialize')
+            ->addBody($serializableMethodBody);
+        $classes[$className] = $namespace;
+        return $classes;
     }
 }

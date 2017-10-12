@@ -203,4 +203,40 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, arrayWithSize(atLeast(1)));
         assertThat($code, hasClassThatMatchesTheExample('OneRequiredOneOptional'));
     }
+
+    public function testCreatesTwoClassesForClassWithSubRefDefined()
+    {
+        $schema = json_decode('{
+            "definitions": {
+                "SubReference": {
+                    "properties": {
+                        "foobar": {"type": "string"},
+                        "baz": {"type": "boolean"}
+                    },
+                    "required": [
+                        "foobar",
+                        "baz"
+                    ],
+                    "type": "object"
+                }
+            },
+            "properties": {
+                "foo": {"type": "boolean"},
+                "bar": {"$ref": "#/definitions/SubReference"}
+            },
+            "type": "object",
+            "required": [
+                "foo",
+                "bar"
+            ]
+        }');
+
+        $codeCreator = new CodeCreator('ClassWithOneSubRef', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(2)));
+        assertThat($code, hasClassThatMatchesTheExample('ClassWithOneSubRef'));
+        assertThat($code, hasClassThatMatchesTheExample('SubReference'));
+    }
 }

@@ -7,6 +7,7 @@ use Elsevier\JSONSchemaPHPGenerator\Properties\BooleanProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\ConstantProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\EnumProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\IntegerProperty;
+use Elsevier\JSONSchemaPHPGenerator\Properties\ObjectProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\StringProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\UntypedProperty;
 
@@ -96,5 +97,16 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(EnumProperty::class)));
+    }
+
+    public function testObjectPropertyWithReferenceReturnsObjectProperty()
+    {
+        $attributes = json_decode('{"$ref": "#/definitions/SubReference"}');
+
+        $factory = new Factory();
+        $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
+
+        assertThat($property, is(anInstanceOf(ObjectProperty::class)));
+        assertThat($property->constructorComment(), is('@param SubReference $FooBar'));
     }
 }

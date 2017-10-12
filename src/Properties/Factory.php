@@ -13,7 +13,9 @@ class Factory
      */
     public function create($name, $attributes, $className, $namespace)
     {
-        if (!isset($attributes->type)) {
+        if (isset($attributes->{'$ref'})) {
+            return new ObjectProperty($name, $attributes->{'$ref'}, $namespace);
+        } elseif (!isset($attributes->type)) {
             return new UntypedProperty();
         }
         if (isset($attributes->enum)) {

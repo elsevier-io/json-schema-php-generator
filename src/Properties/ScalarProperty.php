@@ -15,7 +15,7 @@ class ScalarProperty implements Property
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @param string $name
