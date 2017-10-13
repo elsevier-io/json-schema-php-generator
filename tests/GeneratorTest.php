@@ -25,7 +25,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
     {
         $schema = '{
             "properties": {
-                "foo": {"type": "integer"},
+                "foo": {"type": "number"},
                 "bar": {"type": "string"}
             }
         }';

@@ -6,7 +6,7 @@ use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 
 class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 {
-    public function testCreatesClassWithIntegerProperty()
+    public function testCreatesClassWithNumberProperty()
     {
         $schema = json_decode('{
             "properties": {
@@ -16,12 +16,12 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "foo"
             ]
         }');
-        $codeCreator = new CodeCreator('IntegerProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = new CodeCreator('FloatProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
 
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(1));
-        assertThat($code, hasClassThatMatchesTheExample('IntegerProperty'));
+        assertThat($code, hasClassThatMatchesTheExample('FloatProperty'));
     }
     
     public function testCreatesClassWithStringProperty()
