@@ -7,21 +7,16 @@ use Nette\PhpGenerator\Method;
 
 class ArrayProperty extends ObjectProperty
 {
+    /**
+     * @var string
+     */
+    private $arrayItemType;
+
     public function __construct($name, $type, $namespace)
     {
-        $this->isArray = true;
         parent::__construct($name, $type, $namespace);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function addTo(ClassType $class)
-    {
-        $class->addProperty($this->name)
-            ->setVisibility('private')
-            ->addComment("@var " . $this->type  ."[]");
-        return $class;
+        $this->arrayItemType = $this->type;
+        $this->type.= '[]';
     }
 
     /**
@@ -39,7 +34,7 @@ class ArrayProperty extends ObjectProperty
      */
     public function constructorBody()
     {
-        return '$this->' . $this->name . ' = $this->filterFor' . $this->type . '($' . $this->name . ');' . "\n";
+        return '$this->' . $this->name . ' = $this->filterFor' . $this->arrayItemType . '($' . $this->name . ');' . "\n";
     }
 
     /**
@@ -48,8 +43,8 @@ class ArrayProperty extends ObjectProperty
     public function addSetterTo(ClassType $class)
     {
         $class->addMethod('set' . ucfirst($this->name))
-            ->addComment('@param ' . $this->type . '[] $value')
-            ->addBody('$this->' . $this->name . ' = $this->filterFor' . $this->type . '($value);')
+            ->addComment('@param ' . $this->type . ' $value')
+            ->addBody('$this->' . $this->name . ' = $this->filterFor' . $this->arrayItemType . '($value);')
             ->addParameter('value')
             ->setTypeHint('array');
         return $class;
@@ -60,12 +55,12 @@ class ArrayProperty extends ObjectProperty
      */
     public function addExtraMethodsTo(ClassType $class)
     {
-        $class->addMethod('filterFor' . $this->type)
+        $class->addMethod('filterFor' . $this->arrayItemType)
             ->setVisibility('private')
-            ->addComment("@param array \$array\n@return $this->type[]")
+            ->addComment("@param array \$array\n@return $this->type")
             ->addBody(
                 'return array_filter($array, function ($item) {' . "\n" .
-                '   return $item instanceof ' . $this->type . ';' . "\n" .
+                '   return $item instanceof ' . $this->arrayItemType . ';' . "\n" .
                 '});'
             )
             ->addParameter('array')

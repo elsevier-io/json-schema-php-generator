@@ -16,10 +16,6 @@ class TypedProperty implements Property
      * @var string
      */
     protected $type;
-    /**
-     * @var boolean
-     */
-    protected $isArray = false;
 
     /**
      * @param string $name
@@ -44,8 +40,7 @@ class TypedProperty implements Property
      */
     public function constructorComment()
     {
-        $arrayModifier = $this->isArray ? '[]' : '';
-        return sprintf('@param %s%s $%s', $this->type, $arrayModifier, $this->name);
+        return sprintf('@param %s $%s', $this->type, $this->name);
     }
 
     /**
