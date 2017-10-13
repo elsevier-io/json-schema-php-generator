@@ -6,7 +6,7 @@ use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
-class ScalarProperty implements Property
+class TypedProperty implements Property
 {
     /**
      * @var string
@@ -16,6 +16,10 @@ class ScalarProperty implements Property
      * @var string
      */
     protected $type;
+    /**
+     * @var boolean
+     */
+    protected $isArray = false;
 
     /**
      * @param string $name
@@ -40,7 +44,8 @@ class ScalarProperty implements Property
      */
     public function constructorComment()
     {
-        return '@param ' . $this->type . ' $' . $this->name;
+        $arrayModifier = $this->isArray ? '[]' : '';
+        return sprintf('@param %s%s $%s', $this->type, $arrayModifier, $this->name);
     }
 
     /**
@@ -104,7 +109,7 @@ class ScalarProperty implements Property
     /**
      * @inheritdoc
      */
-    public function addMethodsTo(ClassType $class)
+    public function addExtraMethodsTo(ClassType $class)
     {
         return $class;
     }

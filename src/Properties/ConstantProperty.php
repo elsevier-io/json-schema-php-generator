@@ -4,7 +4,7 @@ namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 
 use Nette\PhpGenerator\Method;
 
-class ConstantProperty extends ScalarProperty
+class ConstantProperty extends TypedProperty
 {
     /**
      * @var string

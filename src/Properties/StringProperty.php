@@ -2,7 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 
-class StringProperty extends ScalarProperty
+class StringProperty extends TypedProperty
 {
     /**
      * @param string $name

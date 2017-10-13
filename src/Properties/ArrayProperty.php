@@ -7,12 +7,10 @@ use Nette\PhpGenerator\Method;
 
 class ArrayProperty extends ObjectProperty
 {
-    /**
-     * @inheritdoc
-     */
-    public function constructorComment()
+    public function __construct($name, $type, $namespace)
     {
-        return '@param ' . $this->type . '[] $' . $this->name;
+        $this->isArray = true;
+        parent::__construct($name, $type, $namespace);
     }
 
     /**
@@ -60,7 +58,7 @@ class ArrayProperty extends ObjectProperty
     /**
      * @inheritdoc
      */
-    public function addMethodsTo(ClassType $class)
+    public function addExtraMethodsTo(ClassType $class)
     {
         $class->addMethod('filterFor' . $this->type)
             ->setVisibility('private')

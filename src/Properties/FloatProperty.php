@@ -2,7 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 
-class FloatProperty extends ScalarProperty
+class FloatProperty extends TypedProperty
 {
     /**
      * @param string $name

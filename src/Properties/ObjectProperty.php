@@ -5,7 +5,7 @@ namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
-class ObjectProperty extends ScalarProperty
+class ObjectProperty extends TypedProperty
 {
     /**
      * @var string
