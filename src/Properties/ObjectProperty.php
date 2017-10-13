@@ -18,8 +18,7 @@ class ObjectProperty extends TypedProperty
     public function __construct($name, $type, $namespace)
     {
         $this->namespace = $namespace;
-        $typeParts = explode('/', $type);
-        parent::__construct($name, array_pop($typeParts));
+        parent::__construct($name, $type);
     }
 
     /**

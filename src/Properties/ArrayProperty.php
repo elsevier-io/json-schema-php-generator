@@ -5,18 +5,22 @@ namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
-class ArrayProperty extends ObjectProperty
+class ArrayProperty extends TypedProperty
 {
     /**
      * @var string
      */
     private $arrayItemType;
+    /**
+     * @var string
+     */
+    protected $namespace;
 
     public function __construct($name, $type, $namespace)
     {
-        parent::__construct($name, $type, $namespace);
-        $this->arrayItemType = $this->type;
-        $this->type.= '[]';
+        $this->namespace = $namespace;
+        $this->arrayItemType = $type;
+        parent::__construct($name, $type . '[]');
     }
 
     /**

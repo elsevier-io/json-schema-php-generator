@@ -14,7 +14,7 @@ class Factory
     public function create($name, $attributes, $className, $namespace)
     {
         if (isset($attributes->{'$ref'})) {
-            return new ObjectProperty($name, $attributes->{'$ref'}, $namespace);
+            return new ObjectProperty($name, $this->extractTypeFromRef($attributes->{'$ref'}), $namespace);
         } elseif (!isset($attributes->type)) {
             return new UntypedProperty();
         }
@@ -32,8 +32,18 @@ class Factory
         } elseif ($attributes->type === 'boolean') {
             return new BooleanProperty($name);
         } elseif ($attributes->type === 'array') {
-            return new ArrayProperty($name, $attributes->items->{'$ref'}, $namespace);
+            return new ArrayProperty($name, $this->extractTypeFromRef($attributes->items->{'$ref'}), $namespace);
         }
         return new UntypedProperty();
+    }
+
+    /**
+     * @param string $ref
+     * @return string
+     */
+    private function extractTypeFromRef($ref)
+    {
+        $typeParts = explode('/', $ref);
+        return array_pop($typeParts);
     }
 }
