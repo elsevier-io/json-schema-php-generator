@@ -72,4 +72,12 @@ class UntypedProperty implements Property
     {
         return $class;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function addMethodsTo(ClassType $class)
+    {
+        return $class;
+    }
 }

@@ -51,4 +51,10 @@ interface Property
      * @return ClassType
      */
     public function addSetterTo(ClassType $class);
+
+    /**
+     * @param ClassType $class
+     * @return ClassType
+     */
+    public function addMethodsTo(ClassType $class);
 }

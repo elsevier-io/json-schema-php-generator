@@ -100,4 +100,12 @@ class ScalarProperty implements Property
             ->addParameter('value');
         return $class;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function addMethodsTo(ClassType $class)
+    {
+        return $class;
+    }
 }

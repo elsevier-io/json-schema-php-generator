@@ -121,4 +121,12 @@ class EnumProperty implements Property
             ->setTypeHint($this->defaultNamespace . '\\' . $this->enumName);
         return $class;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function addMethodsTo(ClassType $class)
+    {
+        return $class;
+    }
 }

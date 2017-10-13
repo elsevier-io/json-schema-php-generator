@@ -1,6 +1,7 @@
 == Version 0.6.0 ==
 
 - Switch to use PHP float type for number properties
+- Add support for properties that contain an array of objects
 
 == Version 0.5.0 ==
 

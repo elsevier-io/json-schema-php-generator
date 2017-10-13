@@ -291,4 +291,34 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, arrayWithSize(atLeast(1)));
         assertThat($code, hasClassThatMatchesTheExample('SubReferenceEnumFoo'));
     }
+
+    public function testWithArrayOfReferencedObjects()
+    {
+        $schema = json_decode('{
+            "properties": {
+                "bar": {
+                    "items": {
+                        "$ref": "#/definitions/SubReference"
+                    },
+                    "type": "array"
+                },
+                "foo": {
+                    "items": {
+                        "$ref": "#/definitions/SubReference"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object",
+            "required": [
+                "bar"
+            ]
+        }');
+        $codeCreator = new CodeCreator('ArrayOfObjects', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('ArrayOfObjects'));
+    }
 }

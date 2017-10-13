@@ -3,6 +3,7 @@
 namespace Elsevier\JSONSchemaPHPGenerator\Tests\Properties;
 
 use Elsevier\JSONSchemaPHPGenerator\Properties\Factory;
+use Elsevier\JSONSchemaPHPGenerator\Properties\ArrayProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\BooleanProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\ConstantProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\EnumProperty;
@@ -108,5 +109,23 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
 
         assertThat($property, is(anInstanceOf(ObjectProperty::class)));
         assertThat($property->constructorComment(), is('@param SubReference $FooBar'));
+    }
+
+    public function testArrayProperty()
+    {
+        $attributes = json_decode('
+            {
+                "items": {
+                    "$ref": "#/definitions/SubReference"
+                },
+                "type": "array"
+            }
+        ');
+
+        $factory = new Factory();
+        $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
+
+        assertThat($property, is(anInstanceOf(ArrayProperty::class)));
+        assertThat($property->constructorComment(), is('@param SubReference[] $FooBar'));
     }
 }

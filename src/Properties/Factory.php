@@ -31,6 +31,8 @@ class Factory
             return new StringProperty($name);
         } elseif ($attributes->type === 'boolean') {
             return new BooleanProperty($name);
+        } elseif ($attributes->type === 'array') {
+            return new ArrayProperty($name, $attributes->items->{'$ref'}, $namespace);
         }
         return new UntypedProperty();
     }
