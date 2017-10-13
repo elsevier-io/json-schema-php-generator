@@ -26,7 +26,7 @@ class ConstantProperty extends TypedProperty
      */
     public function constructorBody()
     {
-        return '$this->' . $this->name . " = '" . $this->value . "';\n";
+        return "\$this->{$this->name} = '{$this->value}';" . PHP_EOL;
     }
 
     /**

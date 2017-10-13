@@ -43,7 +43,7 @@ class ArrayProperty extends TypedProperty
      */
     public function constructorBody()
     {
-        return '$this->' . $this->name . ' = $this->filterFor' . $this->arrayItemType . '($' . $this->name . ');' . "\n";
+        return "\$this->{$this->name} = \$this->filterFor{$this->arrayItemType}(\${$this->name});" . PHP_EOL;
     }
 
     /**
@@ -52,8 +52,8 @@ class ArrayProperty extends TypedProperty
     public function addSetterTo(ClassType $class)
     {
         $class->addMethod('set' . ucfirst($this->name))
-            ->addComment('@param ' . $this->type . ' $value')
-            ->addBody('$this->' . $this->name . ' = $this->filterFor' . $this->arrayItemType . '($value);')
+            ->addComment("@param {$this->type} \$value")
+            ->addBody("\$this->{$this->name} = \$this->filterFor{$this->arrayItemType}(\$value);")
             ->addParameter('value')
             ->setTypeHint('array');
         return $class;
@@ -67,10 +67,11 @@ class ArrayProperty extends TypedProperty
         $class->addMethod('filterFor' . $this->arrayItemType)
             ->setVisibility('private')
             ->addComment("@param array \$array\n@return $this->type")
-            ->addBody(
-                'return array_filter($array, function ($item) {' . "\n" .
-                '   return $item instanceof ' . $this->arrayItemType . ';' . "\n" .
-                '});'
+            ->addBody(<<<CODE
+return array_filter(\$array, function (\$item) {
+   return \$item instanceof {$this->arrayItemType};
+});
+CODE
             )
             ->addParameter('array')
             ->setTypeHint('array');

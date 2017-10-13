@@ -32,7 +32,7 @@ class TypedProperty implements Property
      */
     public function constructorBody()
     {
-        return '$this->' . $this->name . ' = $' . $this->name . ';' . "\n";
+        return "\$this->{$this->name} = \${$this->name};" . PHP_EOL;
     }
 
     /**
@@ -40,7 +40,7 @@ class TypedProperty implements Property
      */
     public function constructorComment()
     {
-        return sprintf('@param %s $%s', $this->type, $this->name);
+        return "@param {$this->type} \${$this->name}";
     }
 
     /**
@@ -68,7 +68,7 @@ class TypedProperty implements Property
      */
     public function serializingCode()
     {
-        return "    '" . $this->name . "' => " . '$this->' . $this->name . ",\n";
+        return "    '{$this->name}' => \$this->{$this->name}," . PHP_EOL;
     }
 
     /**
@@ -76,9 +76,12 @@ class TypedProperty implements Property
      */
     public function optionalSerializingCode()
     {
-        return "if (\$this->$this->name) {\n" .
-            "   \$values['$this->name'] = \$this->$this->name;\n" .
-            "}\n";
+        return <<<CODE
+if (\$this->$this->name) {
+   \$values['$this->name'] = \$this->$this->name;
+}
+
+CODE;
     }
 
     /**
