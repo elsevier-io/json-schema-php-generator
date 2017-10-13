@@ -16,6 +16,11 @@ class ArrayProperty extends TypedProperty
      */
     protected $namespace;
 
+    /**
+     * @param string $name
+     * @param string $type
+     * @param string $namespace
+     */
     public function __construct($name, $type, $namespace)
     {
         $this->namespace = $namespace;

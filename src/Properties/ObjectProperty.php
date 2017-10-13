@@ -13,7 +13,9 @@ class ObjectProperty extends TypedProperty
     protected $namespace;
 
     /**
-     * @inheritdoc
+     * @param string $name
+     * @param string $type
+     * @param string $namespace
      */
     public function __construct($name, $type, $namespace)
     {
