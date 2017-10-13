@@ -76,7 +76,7 @@ class UntypedProperty implements Property
     /**
      * @inheritdoc
      */
-    public function addMethodsTo(ClassType $class)
+    public function addExtraMethodsTo(ClassType $class)
     {
         return $class;
     }

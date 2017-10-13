@@ -4,7 +4,7 @@ namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 
 use Nette\PhpGenerator\Method;
 
-class ConstantProperty extends ScalarProperty
+class ConstantProperty extends TypedProperty
 {
     /**
      * @var string
@@ -26,7 +26,7 @@ class ConstantProperty extends ScalarProperty
      */
     public function constructorBody()
     {
-        return '$this->' . $this->name . " = '" . $this->value . "';\n";
+        return "\$this->{$this->name} = '{$this->value}';" . PHP_EOL;
     }
 
     /**

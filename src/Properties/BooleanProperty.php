@@ -2,7 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 
-class BooleanProperty extends ScalarProperty
+class BooleanProperty extends TypedProperty
 {
     /**
      * @param string $name

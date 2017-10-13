@@ -56,5 +56,5 @@ interface Property
      * @param ClassType $class
      * @return ClassType
      */
-    public function addMethodsTo(ClassType $class);
+    public function addExtraMethodsTo(ClassType $class);
 }

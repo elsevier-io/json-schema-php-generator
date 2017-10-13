@@ -5,25 +5,27 @@ namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
-class ArrayProperty extends ObjectProperty
+class ArrayProperty extends TypedProperty
 {
     /**
-     * @inheritdoc
+     * @var string
      */
-    public function constructorComment()
-    {
-        return '@param ' . $this->type . '[] $' . $this->name;
-    }
+    private $arrayItemType;
+    /**
+     * @var string
+     */
+    protected $namespace;
 
     /**
-     * @inheritdoc
+     * @param string $name
+     * @param string $type
+     * @param string $namespace
      */
-    public function addTo(ClassType $class)
+    public function __construct($name, $type, $namespace)
     {
-        $class->addProperty($this->name)
-            ->setVisibility('private')
-            ->addComment("@var " . $this->type  ."[]");
-        return $class;
+        $this->namespace = $namespace;
+        $this->arrayItemType = $type;
+        parent::__construct($name, $type . '[]');
     }
 
     /**
@@ -41,7 +43,7 @@ class ArrayProperty extends ObjectProperty
      */
     public function constructorBody()
     {
-        return '$this->' . $this->name . ' = $this->filterFor' . $this->type . '($' . $this->name . ');' . "\n";
+        return "\$this->{$this->name} = \$this->filterFor{$this->arrayItemType}(\${$this->name});" . PHP_EOL;
     }
 
     /**
@@ -50,8 +52,8 @@ class ArrayProperty extends ObjectProperty
     public function addSetterTo(ClassType $class)
     {
         $class->addMethod('set' . ucfirst($this->name))
-            ->addComment('@param ' . $this->type . '[] $value')
-            ->addBody('$this->' . $this->name . ' = $this->filterFor' . $this->type . '($value);')
+            ->addComment("@param {$this->type} \$value")
+            ->addBody("\$this->{$this->name} = \$this->filterFor{$this->arrayItemType}(\$value);")
             ->addParameter('value')
             ->setTypeHint('array');
         return $class;
@@ -60,15 +62,16 @@ class ArrayProperty extends ObjectProperty
     /**
      * @inheritdoc
      */
-    public function addMethodsTo(ClassType $class)
+    public function addExtraMethodsTo(ClassType $class)
     {
-        $class->addMethod('filterFor' . $this->type)
+        $class->addMethod('filterFor' . $this->arrayItemType)
             ->setVisibility('private')
-            ->addComment("@param array \$array\n@return $this->type[]")
-            ->addBody(
-                'return array_filter($array, function ($item) {' . "\n" .
-                '   return $item instanceof ' . $this->type . ';' . "\n" .
-                '});'
+            ->addComment("@param array \$array\n@return $this->type")
+            ->addBody(<<<CODE
+return array_filter(\$array, function (\$item) {
+   return \$item instanceof {$this->arrayItemType};
+});
+CODE
             )
             ->addParameter('array')
             ->setTypeHint('array');

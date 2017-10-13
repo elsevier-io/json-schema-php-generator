@@ -138,7 +138,7 @@ class CodeCreator
                 $property->addSetterTo($class);
                 $serializableOptionalProperties .= $property->optionalSerializingCode();
             }
-            $property->addMethodsTo($class);
+            $property->addExtraMethodsTo($class);
         }
         $constructorComment = array_filter($constructorComment, function ($comment) {
             return !empty($comment);

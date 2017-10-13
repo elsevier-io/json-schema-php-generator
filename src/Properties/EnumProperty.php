@@ -70,7 +70,7 @@ class EnumProperty implements Property
      */
     public function constructorBody()
     {
-        return '$this->' . $this->name . ' = $' . $this->name . '->getValue();' . "\n";
+        return "\$this->{$this->name} = \${$this->name}->getValue();" . PHP_EOL;
     }
 
     /**
@@ -86,7 +86,7 @@ class EnumProperty implements Property
      */
     public function serializingCode()
     {
-        return "    '" . $this->name . "' => " . '$this->' . $this->name . ",\n";
+        return "    '{$this->name}' => \$this->{$this->name}," . PHP_EOL;
     }
 
     /**
@@ -94,9 +94,11 @@ class EnumProperty implements Property
      */
     public function optionalSerializingCode()
     {
-        return "if (\$this->$this->name) {\n" .
-            "   \$values['$this->name'] = \$this->$this->name;\n" .
-            "}\n";
+        return <<<CODE
+if (\$this->$this->name) {
+   \$values['$this->name'] = \$this->$this->name;
+}
+CODE;
     }
 
     /**
@@ -125,7 +127,7 @@ class EnumProperty implements Property
     /**
      * @inheritdoc
      */
-    public function addMethodsTo(ClassType $class)
+    public function addExtraMethodsTo(ClassType $class)
     {
         return $class;
     }
