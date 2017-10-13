@@ -16,4 +16,6 @@ So far this is only a partial implementation of the JSON Schema. See tests for w
 - Add warning/confirm step to console command about file delete
 - Add option to read configs from file rather than pass in as args
 - Make namespace argument optional (and hence create output without any namespaces)
-- Add support for arrays, nulls and sub-references
+- Add support for nulls
+- Ensure generator can handle all valid JSON Schemas (Schemata?)
+- Parse schema to AST before generating code (so we can create different code generators)

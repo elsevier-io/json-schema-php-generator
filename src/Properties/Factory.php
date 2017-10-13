@@ -26,11 +26,13 @@ class Factory
             }
         }
         if ($attributes->type === 'number') {
-            return new IntegerProperty($name);
+            return new FloatProperty($name);
         } elseif ($attributes->type === 'string' && !isset($attributes->enum)) {
             return new StringProperty($name);
         } elseif ($attributes->type === 'boolean') {
             return new BooleanProperty($name);
+        } elseif ($attributes->type === 'array') {
+            return new ArrayProperty($name, $attributes->items->{'$ref'}, $namespace);
         }
         return new UntypedProperty();
     }

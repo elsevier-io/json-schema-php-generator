@@ -3,10 +3,11 @@
 namespace Elsevier\JSONSchemaPHPGenerator\Tests\Properties;
 
 use Elsevier\JSONSchemaPHPGenerator\Properties\Factory;
+use Elsevier\JSONSchemaPHPGenerator\Properties\ArrayProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\BooleanProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\ConstantProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\EnumProperty;
-use Elsevier\JSONSchemaPHPGenerator\Properties\IntegerProperty;
+use Elsevier\JSONSchemaPHPGenerator\Properties\FloatProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\ObjectProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\StringProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\UntypedProperty;
@@ -26,7 +27,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testWithInvalidTypeReturnsUntypedProperty()
     {
-        $attributes = json_decode('{ "type": "integer" }');
+        $attributes = json_decode('{ "type": "foobar" }');
 
         $factory = new Factory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
@@ -34,14 +35,14 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         assertThat($property, is(anInstanceOf(UntypedProperty::class)));
     }
 
-    public function testNumberReturnsIntegerProperty()
+    public function testNumberReturnsFloatProperty()
     {
         $attributes = json_decode('{ "type": "number"}');
 
         $factory = new Factory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
-        assertThat($property, is(anInstanceOf(IntegerProperty::class)));
+        assertThat($property, is(anInstanceOf(FloatProperty::class)));
     }
 
     public function testStringReturnsStringProperty()
@@ -108,5 +109,23 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
 
         assertThat($property, is(anInstanceOf(ObjectProperty::class)));
         assertThat($property->constructorComment(), is('@param SubReference $FooBar'));
+    }
+
+    public function testArrayProperty()
+    {
+        $attributes = json_decode('
+            {
+                "items": {
+                    "$ref": "#/definitions/SubReference"
+                },
+                "type": "array"
+            }
+        ');
+
+        $factory = new Factory();
+        $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
+
+        assertThat($property, is(anInstanceOf(ArrayProperty::class)));
+        assertThat($property->constructorComment(), is('@param SubReference[] $FooBar'));
     }
 }
