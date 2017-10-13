@@ -1,3 +1,7 @@
+== Version 0.6.0 ==
+
+- Switch to use PHP float type for number properties
+
 == Version 0.5.0 ==
 
 - Add support for reference properties and object definitions
