@@ -14,9 +14,20 @@ use Elsevier\JSONSchemaPHPGenerator\Properties\StringProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\UntypedProperty;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class FactoryTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $log;
+
+    public function setUp()
+    {
+        $this->log = new Logger('UnitTestLogger');
+        $this->log->pushHandler(new NullHandler());
+    }
 
     public function testWithNoTypeReturnsUntypedProperty()
     {
@@ -153,8 +164,6 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
 
     private function buildFactory()
     {
-        $log = new Logger('UnitTestLogger');
-        $log->pushHandler(new NullHandler());
-        return new Factory($log);
+        return new Factory($this->log);
     }
 }

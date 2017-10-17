@@ -5,9 +5,21 @@ namespace Elsevier\JSONSchemaPHPGenerator\Tests;
 use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $log;
+
+    public function setUp()
+    {
+        $this->log = new Logger('UnitTestLogger');
+        $this->log->pushHandler(new NullHandler());
+    }
+
     public function testCreatesClassWithNumberProperty()
     {
         $schema = json_decode('{
@@ -443,8 +455,6 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 
     private function buildCodeCreator($defaultClass)
     {
-        $log = new Logger('UnitTestLogger');
-        $log->pushHandler(new NullHandler());
-        return new CodeCreator($defaultClass, 'Elsevier\JSONSchemaPHPGenerator\Examples', $log);
+        return new CodeCreator($defaultClass, 'Elsevier\JSONSchemaPHPGenerator\Examples', $this->log);
     }
 }
