@@ -68,17 +68,19 @@ class EnumProperty implements Property
     /**
      * @inheritdoc
      */
-    public function constructorBody()
+    public function addConstructorBody(Method $constructor)
     {
-        return "\$this->{$this->name} = \${$this->name}->getValue();" . PHP_EOL;
+        $constructor->addBody("\$this->{$this->name} = \${$this->name}->getValue();");
+        return $constructor;
     }
 
     /**
      * @inheritdoc
      */
-    public function constructorComment()
+    public function addConstructorComment(Method $constructor)
     {
-        return "@param $this->enumName \$$this->name";
+        $constructor->addComment("@param $this->enumName \$$this->name");
+        return $constructor;
     }
 
     /**

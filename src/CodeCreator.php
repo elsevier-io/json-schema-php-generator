@@ -3,6 +3,7 @@
 namespace Elsevier\JSONSchemaPHPGenerator;
 
 use Elsevier\JSONSchemaPHPGenerator\Properties\Factory;
+use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
 
 class CodeCreator
@@ -49,6 +50,7 @@ class CodeCreator
                 $classes[$className] = $this->createEnum($className, $classDefinition->enum);
             }
         }
+        $classes = $this->handleInterfaces($classes);
         return $classes;
     }
 
@@ -120,33 +122,24 @@ class CodeCreator
         $class = $namespace->addClass($className)
             ->addImplement('\JsonSerializable');
         $constructor = $class->addMethod('__construct');
-        $constructorComment = [];
-        $constructorBody = '';
         $serializableRequiredProperties = '';
         $serializableOptionalProperties = '';
         foreach ($schema->properties as $propertyName => $propertyAttributes) {
             $property = $this->properties->create($propertyName, $propertyAttributes, $className, $this->defaultNamespace);
             if ($this->isRequired($propertyName, $schema)) {
-                $constructorBody .= $property->constructorBody();
-                $constructorComment[] = $property->constructorComment();
+                $constructor = $property->addConstructorBody($constructor);
+                $constructor = $property->addConstructorComment($constructor);
                 $constructor = $property->addParameterTo($constructor);
                 $class = $property->addTo($class);
                 $serializableRequiredProperties .= $property->serializingCode();
                 $classes = array_merge($classes, $property->extraClasses($this));
             } else {
                 $class = $property->addTo($class);
-                $property->addSetterTo($class);
+                $class = $property->addSetterTo($class);
                 $serializableOptionalProperties .= $property->optionalSerializingCode();
             }
             $property->addExtraMethodsTo($class);
         }
-        $constructorComment = array_filter($constructorComment, function ($comment) {
-            return !empty($comment);
-        });
-        if (!empty($constructorComment)) {
-            $constructor->addComment(implode("\n", $constructorComment));
-        }
-        $constructor->addBody($constructorBody);
         if (!empty($serializableOptionalProperties)) {
             $serializableMethodBody = "\$values = [\n" . $serializableRequiredProperties . "];\n";
             $serializableMethodBody .= $serializableOptionalProperties;
@@ -158,5 +151,40 @@ class CodeCreator
             ->addBody($serializableMethodBody);
         $classes[$className] = $namespace;
         return $classes;
+    }
+
+    /**
+     * @param $classes
+     * @return PhpNamespace[]
+     */
+    private function handleInterfaces($classes)
+    {
+        $interfaces = array_filter($classes, function ($class) {
+            return is_array($class);
+        });
+        foreach ($interfaces as $interface => $concreteClasses) {
+            $classes[$interface] = $this->createInterface($interface);
+            foreach ($concreteClasses as $concreteClass) {
+                if (!isset($classes[$concreteClass]) || !($classes[$concreteClass] instanceof PhpNamespace)) {
+                    continue;
+                }
+                /* @var PhpNamespace $namespace */
+                $namespace = $classes[$concreteClass];
+                $namespace->getClasses()[$concreteClass]->addImplement($this->defaultNamespace . '\\' . $interface);
+            }
+        }
+        return $classes;
+    }
+
+    /**
+     * @param string $interface
+     * @return PhpNamespace
+     */
+    private function createInterface($interface)
+    {
+        $namespace = new PhpNamespace($this->defaultNamespace);
+        $namespace->addClass($interface)
+            ->setType(ClassType::TYPE_INTERFACE);
+        return $namespace;
     }
 }

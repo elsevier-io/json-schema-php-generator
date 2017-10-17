@@ -8,6 +8,7 @@ use Elsevier\JSONSchemaPHPGenerator\Properties\BooleanProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\ConstantProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\EnumProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\FloatProperty;
+use Elsevier\JSONSchemaPHPGenerator\Properties\InterfaceProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\ObjectProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\StringProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\UntypedProperty;
@@ -108,7 +109,6 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(ObjectProperty::class)));
-        assertThat($property->constructorComment(), is('@param SubReference $FooBar'));
     }
 
     public function testArrayProperty()
@@ -126,6 +126,26 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(ArrayProperty::class)));
-        assertThat($property->constructorComment(), is('@param SubReference[] $FooBar'));
+    }
+
+    public function testInterfaceProperty()
+    {
+        $attributes = json_decode('
+            {
+                "anyof": [
+                    {
+                        "$ref": "#/definitions/SubReference"
+                    },
+                    {
+                        "$ref": "#/definitions/OtherSubReference"
+                    }
+                ]
+            }
+        ');
+
+        $factory = new Factory();
+        $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
+
+        assertThat($property, is(anInstanceOf(InterfaceProperty::class)));
     }
 }

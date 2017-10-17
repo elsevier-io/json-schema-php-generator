@@ -321,4 +321,121 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, arrayWithSize(atLeast(1)));
         assertThat($code, hasClassThatMatchesTheExample('ArrayOfObjects'));
     }
+
+    public function testWithInterfacePropertyCreatesReferencingClass()
+    {
+        $schema = json_decode('{
+            "definitions": {
+                "ConcreteClassOne": {
+                    "properties": {
+                        "foo": { "type": "string" }
+                    },
+                    "type": "object"
+                },
+                "ConcreteClassTwo": {
+                    "properties": {
+                        "foo": { "type": "string" }
+                    },
+                    "type": "object"
+                }
+            },
+            "properties": {
+                "bar": {
+                    "anyof": [
+                        {"$ref": "#/definitions/ConcreteClassOne"},
+                        {"$ref": "#/definitions/ConcreteClassTwo"}
+                    ]
+                }
+            },
+            "type": "object",
+            "required": [
+                "bar"
+            ]
+        }');
+        $codeCreator = new CodeCreator('InterfaceProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('InterfaceProperty'));
+    }
+
+    public function testWithInterfacePropertyCreatesInterface()
+    {
+        $schema = json_decode('{
+            "definitions": {
+                "ConcreteClassOne": {
+                    "properties": {
+                        "foo": { "type": "string" }
+                    },
+                    "type": "object"
+                },
+                "ConcreteClassTwo": {
+                    "properties": {
+                        "foo": { "type": "string" }
+                    },
+                    "type": "object"
+                }
+            },
+            "properties": {
+                "bar": {
+                    "anyof": [
+                        {"$ref": "#/definitions/ConcreteClassOne"},
+                        {"$ref": "#/definitions/ConcreteClassTwo"}
+                    ]
+                }
+            },
+            "type": "object",
+            "required": [
+                "bar"
+            ]
+        }');
+        $codeCreator = new CodeCreator('InterfaceProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('IBar'));
+    }
+
+    public function testWithInterfacePropertyConcreteClassExtendInterface()
+    {
+        $schema = json_decode('{
+            "definitions": {
+                "ConcreteClassOne": {
+                    "properties": {
+                        "foo": { "type": "string" }
+                    },
+                    "required": [ "foo" ],
+                    "type": "object"
+                },
+                "ConcreteClassTwo": {
+                    "properties": {
+                        "foo": { "type": "string" }
+                    },
+                    "required": [ "foo" ],
+                    "type": "object"
+                }
+            },
+            "properties": {
+                "bar": {
+                    "anyof": [
+                        {"$ref": "#/definitions/ConcreteClassOne"},
+                        {"$ref": "#/definitions/ConcreteClassTwo"}
+                    ]
+                }
+            },
+            "type": "object",
+            "required": [
+                "bar"
+            ]
+        }');
+        $codeCreator = new CodeCreator('InterfaceProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(2)));
+        assertThat($code, hasClassThatMatchesTheExample('ConcreteClassOne'));
+        assertThat($code, hasClassThatMatchesTheExample('ConcreteClassTwo'));
+    }
 }

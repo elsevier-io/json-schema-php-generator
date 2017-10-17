@@ -21,14 +21,16 @@ interface Property
     public function addTo(ClassType $class);
 
     /**
-     * @return string
+     * @param Method $constructor
+     * @return Method
      */
-    public function constructorBody();
+    public function addConstructorBody(Method $constructor);
 
     /**
-     * @return string
+     * @param Method $constructor
+     * @return Method
      */
-    public function constructorComment();
+    public function addConstructorComment(Method $constructor);
 
     /**
      * @return string
