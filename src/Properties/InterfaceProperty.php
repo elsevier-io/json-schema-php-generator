@@ -31,4 +31,3 @@ class InterfaceProperty extends ObjectProperty
         return [ $this->type => $this->concreteClasses ];
     }
 }
-
