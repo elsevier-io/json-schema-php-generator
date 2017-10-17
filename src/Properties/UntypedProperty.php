@@ -12,17 +12,17 @@ class UntypedProperty implements Property
     /**
      * @inheritdoc
      */
-    public function constructorBody()
+    public function addConstructorBody(Method $constructor)
     {
-        return '';
+        return $constructor;
     }
 
     /**
      * @inheritdoc
      */
-    public function constructorComment()
+    public function addConstructorComment(Method $constructor)
     {
-        return '';
+        return $constructor;
     }
 
     /**

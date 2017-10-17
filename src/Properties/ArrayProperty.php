@@ -41,9 +41,10 @@ class ArrayProperty extends TypedProperty
     /**
      * @inheritdoc
      */
-    public function constructorBody()
+    public function addConstructorBody(Method $constructor)
     {
-        return "\$this->{$this->name} = \$this->filterFor{$this->arrayItemType}(\${$this->name});" . PHP_EOL;
+        $constructor->addBody("\$this->{$this->name} = \$this->filterFor{$this->arrayItemType}(\${$this->name});");
+        return $constructor;
     }
 
     /**

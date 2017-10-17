@@ -30,17 +30,19 @@ class TypedProperty implements Property
     /**
      * @inheritdoc
      */
-    public function constructorBody()
+    public function addConstructorBody(Method $constructor)
     {
-        return "\$this->{$this->name} = \${$this->name};" . PHP_EOL;
+        $constructor->addBody("\$this->{$this->name} = \${$this->name};");
+        return $constructor;
     }
 
     /**
      * @inheritdoc
      */
-    public function constructorComment()
+    public function addConstructorComment(Method $constructor)
     {
-        return "@param {$this->type} \${$this->name}";
+        $constructor->addComment("@param {$this->type} \${$this->name}");
+        return $constructor;
     }
 
     /**

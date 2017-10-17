@@ -24,17 +24,18 @@ class ConstantProperty extends TypedProperty
     /**
      * @inheritdoc
      */
-    public function constructorBody()
+    public function addConstructorBody(Method $constructor)
     {
-        return "\$this->{$this->name} = '{$this->value}';" . PHP_EOL;
+        $constructor->addBody("\$this->{$this->name} = '{$this->value}';");
+        return $constructor;
     }
 
     /**
      * @inheritdoc
      */
-    public function constructorComment()
+    public function addConstructorComment(Method $constructor)
     {
-        return '';
+        return $constructor;
     }
 
     /**

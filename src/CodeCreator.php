@@ -120,33 +120,24 @@ class CodeCreator
         $class = $namespace->addClass($className)
             ->addImplement('\JsonSerializable');
         $constructor = $class->addMethod('__construct');
-        $constructorComment = [];
-        $constructorBody = '';
         $serializableRequiredProperties = '';
         $serializableOptionalProperties = '';
         foreach ($schema->properties as $propertyName => $propertyAttributes) {
             $property = $this->properties->create($propertyName, $propertyAttributes, $className, $this->defaultNamespace);
             if ($this->isRequired($propertyName, $schema)) {
-                $constructorBody .= $property->constructorBody();
-                $constructorComment[] = $property->constructorComment();
+                $constructor = $property->addConstructorBody($constructor);
+                $constructor = $property->addConstructorComment($constructor);
                 $constructor = $property->addParameterTo($constructor);
                 $class = $property->addTo($class);
                 $serializableRequiredProperties .= $property->serializingCode();
                 $classes = array_merge($classes, $property->extraClasses($this));
             } else {
                 $class = $property->addTo($class);
-                $property->addSetterTo($class);
+                $class = $property->addSetterTo($class);
                 $serializableOptionalProperties .= $property->optionalSerializingCode();
             }
             $property->addExtraMethodsTo($class);
         }
-        $constructorComment = array_filter($constructorComment, function ($comment) {
-            return !empty($comment);
-        });
-        if (!empty($constructorComment)) {
-            $constructor->addComment(implode("\n", $constructorComment));
-        }
-        $constructor->addBody($constructorBody);
         if (!empty($serializableOptionalProperties)) {
             $serializableMethodBody = "\$values = [\n" . $serializableRequiredProperties . "];\n";
             $serializableMethodBody .= $serializableOptionalProperties;
