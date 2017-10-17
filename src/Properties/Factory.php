@@ -15,6 +15,8 @@ class Factory
     {
         if (isset($attributes->{'$ref'})) {
             return new ObjectProperty($name, $this->extractTypeFromRef($attributes->{'$ref'}), $namespace);
+        } elseif (isset($attributes->anyof)) {
+            return new InterfaceProperty($name, 'I' . ucfirst($name), $namespace);
         } elseif (!isset($attributes->type)) {
             return new UntypedProperty();
         }
