@@ -16,7 +16,10 @@ class Factory
         if (isset($attributes->{'$ref'})) {
             return new ObjectProperty($name, $this->extractTypeFromRef($attributes->{'$ref'}), $namespace);
         } elseif (isset($attributes->anyof)) {
-            return new InterfaceProperty($name, 'I' . ucfirst($name), $namespace);
+            $concreteClasses = array_map(function ($concreteClassRef) {
+                return $this->extractTypeFromRef($concreteClassRef->{'$ref'});
+            }, $attributes->anyof);
+            return new InterfaceProperty($name, 'I' . ucfirst($name), $namespace, $concreteClasses);
         } elseif (!isset($attributes->type)) {
             return new UntypedProperty();
         }

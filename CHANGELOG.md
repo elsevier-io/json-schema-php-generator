@@ -1,3 +1,7 @@
+== Version 0.7.0 ==
+
+- Convert "anyof" into empty interface
+
 == Version 0.6.0 ==
 
 - Switch to use PHP float type for number properties
