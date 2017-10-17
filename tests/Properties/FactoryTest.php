@@ -12,6 +12,8 @@ use Elsevier\JSONSchemaPHPGenerator\Properties\InterfaceProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\ObjectProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\StringProperty;
 use Elsevier\JSONSchemaPHPGenerator\Properties\UntypedProperty;
+use Monolog\Handler\NullHandler;
+use Monolog\Logger;
 
 class FactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -20,7 +22,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
     {
         $attributes = json_decode('{}');
 
-        $factory = new Factory();
+        $factory = $this->buildFactory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(UntypedProperty::class)));
@@ -30,7 +32,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
     {
         $attributes = json_decode('{ "type": "foobar" }');
 
-        $factory = new Factory();
+        $factory = $this->buildFactory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(UntypedProperty::class)));
@@ -40,7 +42,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
     {
         $attributes = json_decode('{ "type": "number"}');
 
-        $factory = new Factory();
+        $factory = $this->buildFactory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(FloatProperty::class)));
@@ -50,7 +52,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
     {
         $attributes = json_decode('{ "type": "string"}');
 
-        $factory = new Factory();
+        $factory = $this->buildFactory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(StringProperty::class)));
@@ -60,7 +62,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
     {
         $attributes = json_decode('{ "type": "boolean"}');
 
-        $factory = new Factory();
+        $factory = $this->buildFactory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(BooleanProperty::class)));
@@ -77,7 +79,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
             }'
         );
 
-        $factory = new Factory();
+        $factory = $this->buildFactory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(ConstantProperty::class)));
@@ -95,7 +97,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
             }'
         );
 
-        $factory = new Factory();
+        $factory = $this->buildFactory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(EnumProperty::class)));
@@ -105,7 +107,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
     {
         $attributes = json_decode('{"$ref": "#/definitions/SubReference"}');
 
-        $factory = new Factory();
+        $factory = $this->buildFactory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(ObjectProperty::class)));
@@ -122,7 +124,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
             }
         ');
 
-        $factory = new Factory();
+        $factory = $this->buildFactory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(ArrayProperty::class)));
@@ -132,7 +134,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
     {
         $attributes = json_decode('
             {
-                "anyof": [
+                "anyOf": [
                     {
                         "$ref": "#/definitions/SubReference"
                     },
@@ -143,9 +145,16 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
             }
         ');
 
-        $factory = new Factory();
+        $factory = $this->buildFactory();
         $property = $factory->create('FooBar', $attributes, 'Class', 'Example\\Namespace');
 
         assertThat($property, is(anInstanceOf(InterfaceProperty::class)));
+    }
+
+    private function buildFactory()
+    {
+        $log = new Logger('UnitTestLogger');
+        $log->pushHandler(new NullHandler());
+        return new Factory($log);
     }
 }
