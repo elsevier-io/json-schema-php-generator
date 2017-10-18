@@ -2,6 +2,8 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Console;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -57,7 +59,10 @@ class GenerateCommand extends Command
         $defaultNamespace = $input->getArgument('namespace');
         $output->writeln('Generating code in namespace ' . $defaultNamespace);
         $output->writeln('    with top-level class ' . $defaultClass);
-        $codeCreator = new CodeCreator($defaultClass, $defaultNamespace);
+
+        $log = new Logger('JSONSchemaPHPGeneratorLogger');
+        $log->pushHandler(new StreamHandler('php://stdout', Logger::INFO));
+        $codeCreator = new CodeCreator($defaultClass, $defaultNamespace, $log);
         $generator = new Generator($outputDir, $codeCreator, $this->schemaDraftFileLocation);
         $localFiles = new Local('.');
         $schemaDir = new Filesystem($localFiles);

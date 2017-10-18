@@ -5,6 +5,7 @@ namespace Elsevier\JSONSchemaPHPGenerator;
 use Elsevier\JSONSchemaPHPGenerator\Properties\Factory;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
+use Psr\Log\LoggerInterface;
 
 class CodeCreator
 {
@@ -20,16 +21,22 @@ class CodeCreator
      * @var Factory
      */
     private $properties;
+    /**
+     * @var LoggerInterface
+     */
+    private $log;
 
     /**
      * @param string $defaultClass
      * @param string $defaultNamespace
+     * @param LoggerInterface $logger
      */
-    public function __construct($defaultClass, $defaultNamespace)
+    public function __construct($defaultClass, $defaultNamespace, LoggerInterface $logger)
     {
         $this->defaultClass = $defaultClass;
         $this->defaultNamespace = $defaultNamespace;
-        $this->properties = new Factory();
+        $this->properties = new Factory($logger);
+        $this->log = $logger;
     }
 
     /**
@@ -42,12 +49,16 @@ class CodeCreator
             return [];
         }
         $classes = $this->createClass($schema, $this->defaultClass);
+        $this->log->debug('Created default class ' . $this->defaultClass . ' (' . implode(', ', array_keys($classes)) . ')');
         $references = isset($schema->definitions) ? $schema->definitions : [];
         foreach ($references as $className => $classDefinition) {
             if (isset($classDefinition->type) && $classDefinition->type === 'object') {
-                $classes = array_merge($classes, $this->createClass($classDefinition, $className));
+                $classesToAdd = $this->createClass($classDefinition, $className);
+                $this->log->debug('Created class ' . $className . ' (' . implode(', ', array_keys($classesToAdd)) . ')');
+                $classes = array_merge($classes, $classesToAdd);
             } else {
                 $classes[$className] = $this->createEnum($className, $classDefinition->enum);
+                $this->log->debug('Created enum ' . $className);
             }
         }
         $classes = $this->handleInterfaces($classes);
@@ -163,6 +174,7 @@ class CodeCreator
             return is_array($class);
         });
         foreach ($interfaces as $interface => $concreteClasses) {
+            $this->log->debug('Handling interface ' . $interface);
             $classes[$interface] = $this->createInterface($interface);
             foreach ($concreteClasses as $concreteClass) {
                 if (!isset($classes[$concreteClass]) || !($classes[$concreteClass] instanceof PhpNamespace)) {

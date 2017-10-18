@@ -3,9 +3,23 @@
 namespace Elsevier\JSONSchemaPHPGenerator\Tests;
 
 use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
+use Monolog\Handler\NullHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $log;
+
+    public function setUp()
+    {
+        $this->log = new Logger('UnitTestLogger');
+        $this->log->pushHandler(new NullHandler());
+    }
+
     public function testCreatesClassWithNumberProperty()
     {
         $schema = json_decode('{
@@ -16,7 +30,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "foo"
             ]
         }');
-        $codeCreator = new CodeCreator('FloatProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('FloatProperty');
 
         $code = $codeCreator->create($schema);
 
@@ -34,7 +48,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "foo"
             ]
         }');
-        $codeCreator = new CodeCreator('StringProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('StringProperty');
 
         $code = $codeCreator->create($schema);
 
@@ -53,7 +67,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "foo"
             ]
         }');
-        $codeCreator = new CodeCreator('BooleanProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('BooleanProperty');
 
         $code = $codeCreator->create($schema);
 
@@ -76,7 +90,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "foo"
             ]
         }');
-        $codeCreator = new CodeCreator('EnumPropertyWithSingleValue', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('EnumPropertyWithSingleValue');
 
         $code = $codeCreator->create($schema);
 
@@ -107,7 +121,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "foo"
             ]
         }');
-        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('EnumProperty');
 
         $code = $codeCreator->create($schema);
 
@@ -133,7 +147,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "foo"
             ]
         }');
-        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('EnumProperty');
 
         $code = $codeCreator->create($schema);
 
@@ -157,7 +171,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "foo"
             ]
         }');
-        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('EnumProperty');
 
         $code = $codeCreator->create($schema);
 
@@ -185,7 +199,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "string"
             ]
         }');
-        $codeCreator = new CodeCreator('MultipleProperties', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('MultipleProperties');
 
         $code = $codeCreator->create($schema);
 
@@ -219,7 +233,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
             ]
         }');
 
-        $codeCreator = new CodeCreator('ClassWithTwoSubRefs', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('ClassWithTwoSubRefs');
 
         $code = $codeCreator->create($schema);
 
@@ -256,7 +270,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "bar"
             ]
         }');
-        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('EnumProperty');
 
         $code = $codeCreator->create($schema);
 
@@ -284,7 +298,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "bar"
             ]
         }');
-        $codeCreator = new CodeCreator('EnumProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('EnumProperty');
 
         $code = $codeCreator->create($schema);
 
@@ -314,7 +328,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "bar"
             ]
         }');
-        $codeCreator = new CodeCreator('ArrayOfObjects', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('ArrayOfObjects');
 
         $code = $codeCreator->create($schema);
 
@@ -341,7 +355,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
             },
             "properties": {
                 "bar": {
-                    "anyof": [
+                    "anyOf": [
                         {"$ref": "#/definitions/ConcreteClassOne"},
                         {"$ref": "#/definitions/ConcreteClassTwo"}
                     ]
@@ -352,7 +366,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "bar"
             ]
         }');
-        $codeCreator = new CodeCreator('InterfaceProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('InterfaceProperty');
 
         $code = $codeCreator->create($schema);
 
@@ -379,7 +393,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
             },
             "properties": {
                 "bar": {
-                    "anyof": [
+                    "anyOf": [
                         {"$ref": "#/definitions/ConcreteClassOne"},
                         {"$ref": "#/definitions/ConcreteClassTwo"}
                     ]
@@ -390,7 +404,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "bar"
             ]
         }');
-        $codeCreator = new CodeCreator('InterfaceProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('InterfaceProperty');
 
         $code = $codeCreator->create($schema);
 
@@ -419,7 +433,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
             },
             "properties": {
                 "bar": {
-                    "anyof": [
+                    "anyOf": [
                         {"$ref": "#/definitions/ConcreteClassOne"},
                         {"$ref": "#/definitions/ConcreteClassTwo"}
                     ]
@@ -430,12 +444,17 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "bar"
             ]
         }');
-        $codeCreator = new CodeCreator('InterfaceProperty', 'Elsevier\JSONSchemaPHPGenerator\Examples');
+        $codeCreator = $this->buildCodeCreator('InterfaceProperty');
 
         $code = $codeCreator->create($schema);
 
         assertThat($code, arrayWithSize(atLeast(2)));
         assertThat($code, hasClassThatMatchesTheExample('ConcreteClassOne'));
         assertThat($code, hasClassThatMatchesTheExample('ConcreteClassTwo'));
+    }
+
+    private function buildCodeCreator($defaultClass)
+    {
+        return new CodeCreator($defaultClass, 'Elsevier\JSONSchemaPHPGenerator\Examples', $this->log);
     }
 }

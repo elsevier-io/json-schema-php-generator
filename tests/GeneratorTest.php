@@ -8,9 +8,23 @@ use Elsevier\JSONSchemaPHPGenerator\InvalidJsonException;
 use Elsevier\JSONSchemaPHPGenerator\InvalidSchemaException;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use Monolog\Handler\NullHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class GeneratorTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $log;
+
+    public function setUp()
+    {
+        $this->log = new Logger('UnitTestLogger');
+        $this->log->pushHandler(new NullHandler());
+    }
+
     public function testEmptySchemaCreatesNoFiles()
     {
         $fileSystem = $this->createFilesystem();
@@ -83,8 +97,8 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
 
     private function buildGenerator($fileSystem = null)
     {
+        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples', $this->log);
         $fileSystem = isset($fileSystem) ? $fileSystem : $this->createFilesystem();
-        $codeCreator = new CodeCreator('FooBar', 'Elsevier\JSONSchemaPHPGenerator\Examples');
         $generator = new Generator($fileSystem, $codeCreator, __DIR__ . '/../vendor/justinrainbow/json-schema/dist/schema/json-schema-draft-04.json');
         return $generator;
     }
