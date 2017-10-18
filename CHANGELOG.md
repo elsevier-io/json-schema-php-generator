@@ -1,3 +1,8 @@
+== Version 0.7.1 ==
+
+- Add basic logging
+- Fix issue with "anyOf" spelled in lowercase
+
 == Version 0.7.0 ==
 
 - Convert "anyof" into empty interface
