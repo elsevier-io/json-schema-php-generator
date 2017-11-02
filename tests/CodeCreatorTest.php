@@ -291,18 +291,19 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 }
             },
             "properties": {
-                "bar": {"$ref": "#/definitions/SubReferenceEnum"}
+                "foo": {"$ref": "#/definitions/SubReferenceEnumFoo"}
             },
             "type": "object",
             "required": [
-                "bar"
+                "foo"
             ]
         }');
-        $codeCreator = $this->buildCodeCreator('EnumProperty');
+        $codeCreator = $this->buildCodeCreator('ObjectWithSubReferenceEnum');
 
         $code = $codeCreator->create($schema);
 
-        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, arrayWithSize(atLeast(2)));
+        assertThat($code, hasClassThatMatchesTheExample('ObjectWithSubReferenceEnum'));
         assertThat($code, hasClassThatMatchesTheExample('SubReferenceEnumFoo'));
     }
 
