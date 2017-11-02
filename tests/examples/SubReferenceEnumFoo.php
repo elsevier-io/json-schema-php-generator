@@ -2,7 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
-class SubReferenceEnumFoo
+class SubReferenceEnumFoo implements \JsonSerializable
 {
     const FOO = 'Foo';
     const BAR = 'Bar';
@@ -23,7 +23,7 @@ class SubReferenceEnumFoo
         $this->value = $value;
     }
 
-    public function getValue()
+    public function jsonSerialize()
     {
         return $this->value;
     }
