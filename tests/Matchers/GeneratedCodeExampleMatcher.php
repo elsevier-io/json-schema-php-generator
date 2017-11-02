@@ -18,10 +18,10 @@ class GeneratedCodeExampleMatcher extends BaseMatcher
         $this->expectedCode = $this->getExample($className . '.php');
     }
 
-    public function matches($generatedCode)
+    public function matches($generatedJSON)
     {
-        assertThat($generatedCode, hasKey($this->className));
-        $actualCode = $this->removeWhiteSpace($generatedCode[$this->className]);
+        assertThat($generatedJSON, hasKey($this->className));
+        $actualCode = $this->removeWhiteSpace($generatedJSON[$this->className]);
         return $actualCode === $this->expectedCode;
     }
 
@@ -34,11 +34,9 @@ class GeneratedCodeExampleMatcher extends BaseMatcher
     public function describeMismatch($item, Description $description)
     {
         $actualText = $this->removeWhiteSpace($item[$this->className]);
-        $diff = false;
         $char = 0;
-        while (!$diff && $char < strlen($this->expectedCode) && $char < strlen($actualText)) {
+        while ($char < strlen($this->expectedCode) && $char < strlen($actualText)) {
             if ($actualText[$char] !== $this->expectedCode[$char]) {
-                $diff = true;
                 break;
             }
             $char++;

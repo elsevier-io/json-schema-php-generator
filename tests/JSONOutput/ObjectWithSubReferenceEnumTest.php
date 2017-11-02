@@ -15,14 +15,9 @@ class ObjectWithSubReferenceEnumTest extends TestCase
         $object = new ObjectWithSubReferenceEnum($subReference);
         $json = json_encode($object);
 
-        $expected = $this->removeWhiteSpace('{
+        $expected = '{
             "foo": "Foo"
-        }');
-        $this->assertEquals($expected, $json);
-    }
-
-    private function removeWhiteSpace($code)
-    {
-        return preg_replace('/\s+/', '', $code);
+        }';
+        assertThat($json, matchesJSONOutput($expected));
     }
 }

@@ -17,7 +17,7 @@ class ArrayOfObjectsTest extends TestCase
         $object = new ArrayOfObjects($subReferences);
         $json = json_encode($object);
 
-        $expected = $this->removeWhiteSpace('{
+        $expected = '{
             "bar": [
                 {
                     "foobar": "foo",
@@ -28,8 +28,8 @@ class ArrayOfObjectsTest extends TestCase
                     "baz": false
                 }
             ]
-        }');
-        $this->assertEquals($expected, $json);
+        }';
+        assertThat($json, matchesJSONOutput($expected));
     }
 
     public function testOutputsRequiredAndOptionalArray()
@@ -44,7 +44,7 @@ class ArrayOfObjectsTest extends TestCase
         $object->setFoo($optionalSubReferences);
         $json = json_encode($object);
 
-        $expected = $this->removeWhiteSpace('{
+        $expected = '{
             "bar": [
                 {
                     "foobar": "bar",
@@ -57,8 +57,8 @@ class ArrayOfObjectsTest extends TestCase
                     "baz": true
                 }
             ]
-        }');
-        $this->assertEquals($expected, $json);
+        }';
+        assertThat($json, matchesJSONOutput($expected));
     }
 
     public function testFiltersArrayForInvalidValues()
@@ -71,19 +71,14 @@ class ArrayOfObjectsTest extends TestCase
         $object = new ArrayOfObjects($subReferences);
         $json = json_encode($object);
 
-        $expected = $this->removeWhiteSpace('{
+        $expected = '{
             "bar": [
                 {
                     "foobar": "foo",
                     "baz": true
                 }
             ]
-        }');
-        $this->assertEquals($expected, $json);
-    }
-
-    private function removeWhiteSpace($code)
-    {
-        return preg_replace('/\s+/', '', $code);
+        }';
+        assertThat($json, matchesJSONOutput($expected));
     }
 }
