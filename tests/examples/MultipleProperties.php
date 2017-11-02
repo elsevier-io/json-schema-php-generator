@@ -7,7 +7,7 @@ class MultipleProperties implements \JsonSerializable
     /** @var boolean */
     private $bool;
 
-    /** @var string */
+    /** @var MultiplePropertiesEnum */
     private $enum;
 
     /** @var string */
@@ -21,7 +21,7 @@ class MultipleProperties implements \JsonSerializable
     public function __construct($bool, MultiplePropertiesEnum $enum, $string)
     {
         $this->bool = $bool;
-        $this->enum = $enum->getValue();
+        $this->enum = $enum;
         $this->string = $string;
     }
 
