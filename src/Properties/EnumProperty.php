@@ -119,8 +119,8 @@ CODE;
     public function addSetterTo(ClassType $class)
     {
         $class->addMethod('set' . ucfirst($this->name))
-            ->addComment("@param $this->enumName \$value")
-            ->addBody("\$this->$this->name = \$value;")
+            ->addComment("@param {$this->enumName} \$value")
+            ->addBody("\$this->{$this->name} = \$value;")
             ->addParameter('value')
             ->setTypeHint($this->defaultNamespace . '\\' . $this->enumName);
         return $class;
