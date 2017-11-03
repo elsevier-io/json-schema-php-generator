@@ -61,7 +61,7 @@ class EnumProperty implements Property
     {
         $class->addProperty($this->name)
             ->setVisibility('private')
-            ->addComment("@var string");
+            ->addComment("@var {$this->enumName}");
         return $class;
     }
 
@@ -70,7 +70,7 @@ class EnumProperty implements Property
      */
     public function addConstructorBody(Method $constructor)
     {
-        $constructor->addBody("\$this->{$this->name} = \${$this->name}->getValue();");
+        $constructor->addBody("\$this->{$this->name} = \${$this->name};");
         return $constructor;
     }
 
@@ -119,8 +119,8 @@ CODE;
     public function addSetterTo(ClassType $class)
     {
         $class->addMethod('set' . ucfirst($this->name))
-            ->addComment("@param $this->enumName \$value")
-            ->addBody("\$this->$this->name = \$value->getValue();")
+            ->addComment("@param {$this->enumName} \$value")
+            ->addBody("\$this->{$this->name} = \$value;")
             ->addParameter('value')
             ->setTypeHint($this->defaultNamespace . '\\' . $this->enumName);
         return $class;

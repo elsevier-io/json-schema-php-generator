@@ -4,9 +4,9 @@ namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
 class EnumProperty implements \JsonSerializable
 {
-    /** @var string */
+    /** @var EnumPropertyFoo */
     private $foo;
-    /** @var string */
+    /** @var EnumPropertyBar */
     private $bar;
 
     /**
@@ -14,7 +14,7 @@ class EnumProperty implements \JsonSerializable
      */
     public function __construct(EnumPropertyFoo $foo)
     {
-        $this->foo = $foo->getValue();
+        $this->foo = $foo;
     }
 
     /**
@@ -22,7 +22,7 @@ class EnumProperty implements \JsonSerializable
      */
     public function setBar(EnumPropertyBar $value)
     {
-        $this->bar = $value->getValue();
+        $this->bar = $value;
     }
 
     public function jsonSerialize()

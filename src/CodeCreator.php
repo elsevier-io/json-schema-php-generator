@@ -79,7 +79,8 @@ class CodeCreator
     public function createEnum($className, $values)
     {
         $namespace = new PhpNamespace($this->defaultNamespace);
-        $class = $namespace->addClass($className);
+        $class = $namespace->addClass($className)
+            ->addImplement('\JsonSerializable');
         foreach ($values as $value) {
             $class->addConst(strtoupper($value), $value);
         }
@@ -104,8 +105,8 @@ class CodeCreator
                             ->addComment($constructorComment)
                             ->addBody($constructorBody);
         $constructor->addParameter('value');
-        $class->addMethod('getValue')
-            ->addBody(' return $this->value;');
+        $class->addMethod('jsonSerialize')
+            ->addBody('return $this->value;');
         return $namespace;
     }
 
