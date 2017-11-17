@@ -16,8 +16,8 @@ class SubReference implements \JsonSerializable
      */
     public function __construct($foobar, $baz)
     {
-        $this->foobar = $foobar;
-        $this->baz = $baz;
+        $this->foobar = (string)$foobar;
+        $this->baz = (bool)$baz;
     }
 
     public function jsonSerialize()

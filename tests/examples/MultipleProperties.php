@@ -20,9 +20,9 @@ class MultipleProperties implements \JsonSerializable
      */
     public function __construct($bool, MultiplePropertiesEnum $enum, $string)
     {
-        $this->bool = $bool;
+        $this->bool = (bool)$bool;
         $this->enum = $enum;
-        $this->string = $string;
+        $this->string = (string)$string;
     }
 
     public function jsonSerialize()
