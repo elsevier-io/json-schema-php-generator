@@ -14,7 +14,7 @@ class BooleanProperty implements \JsonSerializable
      */
     public function __construct($foo)
     {
-        $this->foo = $foo;
+        $this->foo = (bool)$foo;
     }
 
     /**

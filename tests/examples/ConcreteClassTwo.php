@@ -12,7 +12,7 @@ class ConcreteClassTwo implements \JsonSerializable, IBar
      */
     public function __construct($foo)
     {
-        $this->foo = $foo;
+        $this->foo = (string)$foo;
     }
 
     public function jsonSerialize()
