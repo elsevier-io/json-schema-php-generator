@@ -105,14 +105,16 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "foo": {
                     "enum": [
                         "Foo",
-                        "Bar"
+                        "Bar",
+                        "Foo Bar"
                     ],
                     "type": "string"
                 },
                 "bar": {
                     "enum": [
                         "Foo",
-                        "Bar"
+                        "Bar",
+                        "Foo Bar"
                     ],
                     "type": "string"
                 }
@@ -138,7 +140,8 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 "foo": {
                     "enum": [
                         "Foo",
-                        "Bar"
+                        "Bar",
+                        "Foo Bar"
                     ],
                     "type": "string"
                 }

@@ -82,7 +82,7 @@ class CodeCreator
         $class = $namespace->addClass($className)
             ->addImplement('\JsonSerializable');
         foreach ($values as $value) {
-            $class->addConst(strtoupper($value), $value);
+            $class->addConst(str_replace(' ', '_', strtoupper($value)), $value);
         }
         $class->addProperty('value')
             ->setVisibility('private')
@@ -92,7 +92,7 @@ class CodeCreator
         $constructorComment.= "@throws InvalidValueException";
 
         $constants = array_map(function ($constant) {
-            return 'self::' . strtoupper($constant);
+            return 'self::' . str_replace(' ', '_', strtoupper($constant));
         }, $values);
         $constantsList = implode(', ', $constants);
         $constructorBody = " \$possibleValues = [$constantsList];\n" .
