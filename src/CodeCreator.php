@@ -81,8 +81,11 @@ class CodeCreator
         $namespace = new PhpNamespace($this->defaultNamespace);
         $class = $namespace->addClass($className)
             ->addImplement('\JsonSerializable');
+        $constantNames = [];
         foreach ($values as $value) {
-            $class->addConst($this->normalizeEnumValue($value), $value);
+            $constantName = $this->normalizeEnumConstantName($value);
+            $class->addConst($constantName, $value);
+            $constantNames[] = $constantName;
         }
         $class->addProperty('value')
             ->setVisibility('private')
@@ -92,8 +95,8 @@ class CodeCreator
         $constructorComment.= "@throws InvalidValueException";
 
         $constants = array_map(function ($constant) {
-            return 'self::' . $this->normalizeEnumValue($constant);
-        }, $values);
+            return 'self::' . $constant;
+        }, $constantNames);
         $constantsList = implode(', ', $constants);
         $constructorBody = " \$possibleValues = [$constantsList];\n" .
             "if (!in_array(\$value, \$possibleValues)) {\n" .
@@ -111,10 +114,13 @@ class CodeCreator
     }
 
     /**
+     * Naming rules for constants are a little looser than just alpha characters but
+     * this will work as a rough approximation
+     *
      * @param $value
      * @return string
      */
-    private function normalizeEnumValue($value)
+    private function normalizeEnumConstantName($value)
     {
         return strtoupper(preg_replace('/[^A-Za-z]/', '_', $value));
     }
