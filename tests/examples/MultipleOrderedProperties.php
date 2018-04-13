@@ -4,24 +4,16 @@ namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 
 class MultipleOrderedProperties implements \JsonSerializable
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $charlie;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $bravo;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $alpha;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $delta;
 
 
