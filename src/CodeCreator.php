@@ -152,7 +152,7 @@ class CodeCreator
         $serializableRequiredProperties = '';
         $serializableOptionalProperties = '';
         $propertyOrder;
-        if(isset($schema->propertyOrder)) {
+        if (isset($schema->propertyOrder)) {
             $propertyOrder = $schema->propertyOrder;
         } else {
             $propertyOrder = array_keys(get_object_vars($schema->properties));
