@@ -457,6 +457,32 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('ConcreteClassTwo'));
     }
 
+    public function testCreateOrderedConstructors()
+    {
+        $schema = json_decode('{
+            "properties": {
+                "alpha": {"type": "string"},
+                "bravo": {"type": "string"},
+                "charlie": {"type": "string"},
+                "delta": {"type": "string"}
+            },
+            "required": [
+                "alpha",
+                "bravo",
+                "charlie"
+            ],
+            "propertyOrder": [
+                "charlie",
+                "bravo",
+                "alpha",
+                "delta"
+            ]
+        }');
+        $codeCreator = $this->buildCodeCreator('MultipleOrderedProperties');
+        $code = $codeCreator->create($schema);
+        assertThat($code, hasClassThatMatchesTheExample('MultipleOrderedProperties'));
+    }
+
     private function buildCodeCreator($defaultClass)
     {
         return new CodeCreator($defaultClass, 'Elsevier\JSONSchemaPHPGenerator\Examples', $this->log);

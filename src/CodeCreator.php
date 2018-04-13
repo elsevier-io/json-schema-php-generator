@@ -151,7 +151,14 @@ class CodeCreator
         $constructor = $class->addMethod('__construct');
         $serializableRequiredProperties = '';
         $serializableOptionalProperties = '';
-        foreach ($schema->properties as $propertyName => $propertyAttributes) {
+        $propertyOrder;
+        if(isset($schema->propertyOrder)) {
+            $propertyOrder = $schema->propertyOrder;
+        } else {
+            $propertyOrder = array_keys(get_object_vars($schema->properties));
+        }
+        foreach ($propertyOrder as $propertyName) {
+            $propertyAttributes = $schema->properties->$propertyName;
             $property = $this->properties->create($propertyName, $propertyAttributes, $className, $this->defaultNamespace);
             if ($this->isRequired($propertyName, $schema)) {
                 $constructor = $property->addConstructorBody($constructor);
