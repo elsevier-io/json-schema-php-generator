@@ -158,6 +158,7 @@ class CodeCreator
             $propertyNamesInOrder = array_keys(get_object_vars($schema->properties));
         }
         foreach ($propertyNamesInOrder as $propertyName) {
+            // get the attributes from the schema using the property name
             $propertyAttributes = $schema->properties->$propertyName;
             $property = $this->properties->create($propertyName, $propertyAttributes, $className, $this->defaultNamespace);
             if ($this->isRequired($propertyName, $schema)) {
