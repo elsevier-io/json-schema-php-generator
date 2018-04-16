@@ -1,7 +1,10 @@
 # elsevier-io/json-schema-php-generator [![Build Status](https://travis-ci.org/elsevier-io/json-schema-php-generator.svg?branch=master)](https://travis-ci.org/elsevier-io/json-schema-php-generator.svg?branch=master)
 
 
-Tool to generate PHP representations of the data structures in a JSON Schema
+Tool to generate PHP representations of the data structures in a JSON Schema. Entities in the JSON schema are represented 
+by PHP DTOs. Required properties are added via the constructor (respecting the order if it is defined in the JSON) and optional
+properties are added via setters. See the `tests/examples` folder for examples of the PHP created (these examples are used 
+by the tests). 
 
 There is a command-line script to run the tool:
 ```bash

@@ -459,7 +459,6 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateOrderedConstructors()
     {
-        // constructor is expected to have a subset of properties as 'delta' isn't required. Class will have seperate setter for optional properties.
         $schema = json_decode('{
             "properties": {
                 "alpha": {"type": "string"},
