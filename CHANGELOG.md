@@ -1,3 +1,7 @@
+== Version 0.8.9 ==
+
+- Add support for propertyOrder
+
 == Version 0.7.1 ==
 
 - Add basic logging
