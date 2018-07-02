@@ -83,9 +83,9 @@ class ArrayProperty extends TypedProperty
             ->setVisibility('private')
             ->addComment("@param array \$array\n@return $this->type")
             ->addBody(<<<CODE
-return array_filter(\$array, function (\$item) {
+return array_values(array_filter(\$array, function (\$item) {
    return {$this->itemFilter};
-});
+}));
 CODE
             )
             ->addParameter('array')

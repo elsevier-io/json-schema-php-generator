@@ -51,8 +51,8 @@ class ArrayOfScalarsTest extends TestCase
     public function testFiltersArrayForInvalidValues()
     {
         $subReferences = [
-            "string",
             new \StdClass("foo", true),
+            "string",
             true
         ];
         $object = new ArrayOfScalars($subReferences);

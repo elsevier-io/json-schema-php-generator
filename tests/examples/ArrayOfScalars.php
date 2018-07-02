@@ -23,9 +23,9 @@ class ArrayOfScalars implements \JsonSerializable
      */
     private function filterForString(array $array)
     {
-        return array_filter($array, function ($item) {
+        return array_values(array_filter($array, function ($item) {
             return is_string($item);
-        });
+        }));
     }
 
     /**
@@ -42,9 +42,9 @@ class ArrayOfScalars implements \JsonSerializable
      */
     private function filterForFloat(array $array)
     {
-        return array_filter($array, function ($item) {
+        return array_values(array_filter($array, function ($item) {
             return is_float($item);
-        });
+        }));
     }
 
     public function jsonSerialize()
