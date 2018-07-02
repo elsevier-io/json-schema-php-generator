@@ -22,3 +22,4 @@ So far this is only a partial implementation of the JSON Schema. See tests for w
 - Add support for nulls
 - Ensure generator can handle all valid JSON Schemas (Schemata?)
 - Parse schema to AST before generating code (so we can create different code generators)
+- Add option to toggle between swallowing invalid values and throwing in generated code 
