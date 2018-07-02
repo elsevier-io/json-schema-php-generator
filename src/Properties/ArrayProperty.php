@@ -15,6 +15,14 @@ class ArrayProperty extends TypedProperty
      * @var string
      */
     protected $namespace;
+    /**
+     * @var string
+     */
+    protected $filterMethodName;
+    /**
+     * @var string
+     */
+    protected $itemFilter;
 
     /**
      * @param string $name
@@ -26,6 +34,12 @@ class ArrayProperty extends TypedProperty
         $this->namespace = $namespace;
         $this->arrayItemType = $type;
         parent::__construct($name, $type . '[]');
+        $this->filterMethodName = 'filterFor' . ucfirst($this->arrayItemType);
+        if (array_search($type, ['string', 'float', 'boolean']) !== false) {
+            $this->itemFilter = "is_{$this->arrayItemType}(\$item)";
+        } else {
+            $this->itemFilter = "\$item instanceof {$this->arrayItemType}";
+        }
     }
 
     /**
@@ -43,7 +57,7 @@ class ArrayProperty extends TypedProperty
      */
     public function addConstructorBody(Method $constructor)
     {
-        $constructor->addBody("\$this->{$this->name} = \$this->filterFor{$this->arrayItemType}(\${$this->name});");
+        $constructor->addBody("\$this->{$this->name} = \$this->{$this->filterMethodName}(\${$this->name});");
         return $constructor;
     }
 
@@ -54,7 +68,7 @@ class ArrayProperty extends TypedProperty
     {
         $class->addMethod('set' . ucfirst($this->name))
             ->addComment("@param {$this->type} \$value")
-            ->addBody("\$this->{$this->name} = \$this->filterFor{$this->arrayItemType}(\$value);")
+            ->addBody("\$this->{$this->name} = \$this->{$this->filterMethodName}(\$value);")
             ->addParameter('value')
             ->setTypeHint('array');
         return $class;
@@ -65,12 +79,12 @@ class ArrayProperty extends TypedProperty
      */
     public function addExtraMethodsTo(ClassType $class)
     {
-        $class->addMethod('filterFor' . $this->arrayItemType)
+        $class->addMethod($this->filterMethodName)
             ->setVisibility('private')
             ->addComment("@param array \$array\n@return $this->type")
             ->addBody(<<<CODE
 return array_filter(\$array, function (\$item) {
-   return \$item instanceof {$this->arrayItemType};
+   return {$this->itemFilter};
 });
 CODE
             )

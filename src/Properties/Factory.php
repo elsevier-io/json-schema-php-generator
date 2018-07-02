@@ -61,7 +61,9 @@ class Factory
             return new BooleanProperty($name);
         } elseif ($attributes->type === 'array') {
             $this->log->debug('Created Array property ' . $name);
-            return new ArrayProperty($name, $this->extractTypeFromRef($attributes->items->{'$ref'}), $namespace);
+            $arrayItemType = isset($attributes->items->{'$ref'}) ? $this->extractTypeFromRef($attributes->items->{'$ref'}) : $this->extractTypeFromRef($attributes->items->{'type'});
+            $arrayItemType = $arrayItemType === 'number' ? 'float' : $arrayItemType;
+            return new ArrayProperty($name, $arrayItemType, $namespace);
         }
         return new UntypedProperty();
     }
