@@ -340,6 +340,36 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('ArrayOfObjects'));
     }
 
+    public function testWithArrayOfScalarTypes()
+    {
+        $schema = json_decode('{
+            "properties": {
+                "bar": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "foo": {
+                    "items": {
+                        "type": "number"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object",
+            "required": [
+                "bar"
+            ]
+        }');
+        $codeCreator = $this->buildCodeCreator('ArrayOfScalars');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('ArrayOfScalars'));
+    }
+
     public function testWithInterfacePropertyCreatesReferencingClass()
     {
         $schema = json_decode('{

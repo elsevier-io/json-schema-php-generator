@@ -64,8 +64,8 @@ class ArrayOfObjectsTest extends TestCase
     public function testFiltersArrayForInvalidValues()
     {
         $subReferences = [
-            new SubReference("foo", true),
             "string",
+            new SubReference("foo", true),
             true
         ];
         $object = new ArrayOfObjects($subReferences);

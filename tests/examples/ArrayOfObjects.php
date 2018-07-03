@@ -23,9 +23,9 @@ class ArrayOfObjects implements \JsonSerializable
      */
     private function filterForSubReference(array $array)
     {
-        return array_filter($array, function ($item) {
+        return array_values(array_filter($array, function ($item) {
             return $item instanceof SubReference;
-        });
+        }));
     }
 
     /**
