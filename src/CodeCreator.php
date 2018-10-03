@@ -68,9 +68,6 @@ class CodeCreator
     private function isRequired($property, $schema)
     {
         $requiredProperties = (isset($schema->required)) ? $schema->required : [];
-        if (isset($schema->properties->$property->anyOf)){
-            $requiredProperties[] = $property;
-        }
         return in_array($property, $requiredProperties);
     }
 
@@ -170,6 +167,9 @@ class CodeCreator
                 $serializableRequiredProperties .= $property->serializingCode();
                 $classes = array_merge($classes, $property->extraClasses($this));
             } else {
+                if (isset($schema->properties->$propertyName->anyOf)){
+                    $classes = array_merge($classes, $property->extraClasses($this));
+                }
                 $class = $property->addTo($class);
                 $class = $property->addSetterTo($class);
                 $serializableOptionalProperties .= $property->optionalSerializingCode();
