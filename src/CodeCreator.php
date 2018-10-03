@@ -67,7 +67,10 @@ class CodeCreator
 
     private function isRequired($property, $schema)
     {
-        $requiredProperties = isset($schema->required) ? $schema->required : [];
+        $requiredProperties = (isset($schema->required)) ? $schema->required : [];
+        if (isset($schema->properties->$property->anyOf)){
+            $requiredProperties[] = $property;
+        }
         return in_array($property, $requiredProperties);
     }
 
