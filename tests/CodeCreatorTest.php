@@ -513,7 +513,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('MultipleOrderedProperties'));
     }
 
-    public function testUnRequieredTypeIsCreated() {
+    public function testUnrequieredTypeIsCreated() {
         $schema = json_decode('{
             "definitions": {
                 "ICharlie": {
