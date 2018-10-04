@@ -513,6 +513,81 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('MultipleOrderedProperties'));
     }
 
+    public function testStoreSpecificInterfaceIsCreated() {
+        $schema = json_decode('{
+            "definitions": {
+                "IEvolve": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "affiliationBillTo": {
+                            "type": "string"
+                        },
+                        "affiliationCustomerId": {
+                            "type": "string"
+                        },
+                        "deltaAccountId": {
+                            "type": "string"
+                        },
+                        "salesRepNumber": {
+                            "type": "string"
+                        }
+                    },
+                    "propertyOrder": [
+                        "deltaAccountId",
+                        "affiliationCustomerId",
+                        "affiliationBillTo",
+                        "salesRepNumber"
+                    ],
+                    "required": [
+                        "affiliationCustomerId",
+                        "deltaAccountId",
+                        "salesRepNumber"
+                    ],
+                    "type": "object"
+                },
+                "IPointOfSale": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "consignee": {
+                            "type": "string"
+                        },
+                        "salesRepNumber": {
+                            "type": "string"
+                        }
+                    },
+                    "propertyOrder": [
+                        "salesRepNumber",
+                        "consignee"
+                    ],
+                    "required": [
+                        "consignee",
+                        "salesRepNumber"
+                    ],
+                    "type": "object"
+                }
+            },
+            "properties": {
+                "storeSpecific": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/IEvolve"
+                        },
+                        {
+                            "$ref": "#/definitions/IPointOfSale"
+                        }
+                    ]
+                }
+            },
+            "propertyOrder": [
+                "storeSpecific"
+            ]
+        }');
+
+        $codeCreator = new CodeCreator($defaultClass, 'Elsevier\JSONSchemaPHPGenerator\Examples', $this->log);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+    }
+
     private function buildCodeCreator($defaultClass)
     {
         return new CodeCreator($defaultClass, 'Elsevier\JSONSchemaPHPGenerator\Examples', $this->log);
