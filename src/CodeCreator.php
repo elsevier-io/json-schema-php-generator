@@ -167,7 +167,7 @@ class CodeCreator
                 $serializableRequiredProperties .= $property->serializingCode();
                 $classes = array_merge($classes, $property->extraClasses($this));
             } else {
-                if (isset($schema->properties->$propertyName->anyOf)){
+                if (isset($schema->properties->$propertyName->anyOf)) {
                     $classes = array_merge($classes, $property->extraClasses($this));
                 }
                 $class = $property->addTo($class);
