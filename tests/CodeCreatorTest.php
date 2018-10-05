@@ -513,6 +513,66 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('MultipleOrderedProperties'));
     }
 
+    public function testUnrequiredTypeIsCreated()
+    {
+        $schema = json_decode('{
+            "definitions": {
+                "ICharlie": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "charlie": {
+                            "type": "string"
+                        }
+                    },
+                    "propertyOrder": [
+                        "charlie"
+                    ],
+                    "required": [
+                        "charlie"
+                    ],
+                    "type": "object"
+                },
+                "IBravo": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "bravo": {
+                            "type": "string"
+                        }
+                    },
+                    "propertyOrder": [
+                        "bravo"
+                    ],
+                    "required": [
+                        "bravo"
+                    ],
+                    "type": "object"
+                }
+            },
+            "properties": {
+                "bar": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/ICharlie"
+                        },
+                        {
+                            "$ref": "#/definitions/IBravo"
+                        }
+                    ]
+                }
+            },
+            "propertyOrder": [
+                "bar"
+            ]
+        }');
+
+        $codeCreator = $this->buildCodeCreator('InterfaceProperty');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('IBar'));
+    }
+
     private function buildCodeCreator($defaultClass)
     {
         return new CodeCreator($defaultClass, 'Elsevier\JSONSchemaPHPGenerator\Examples', $this->log);
