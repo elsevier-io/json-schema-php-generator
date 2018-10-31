@@ -23,6 +23,7 @@
     }],
     "require": {
         "php" : "^5.5 || ^7.0",
+        "ext-json": "*",
         "ext-mbstring": "*",
         "league/flysystem": "^1.0",
         "nette/php-generator": "2.3.*",
