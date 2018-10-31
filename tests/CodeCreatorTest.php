@@ -573,6 +573,28 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('IBar'));
     }
 
+    public function testStringMinLength()
+    {
+        $schema = json_decode('{
+            "properties": {
+                "foo": {
+                    "type": "string",
+                    "minLength": 1
+                }
+            },
+            "required": [
+                "foo"
+            ]
+        }');
+
+        $codeCreator = $this->buildCodeCreator('StringPropertyWithLengthValidation');
+
+        $code = $codeCreator->create($schema);
+
+        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, hasClassThatMatchesTheExample('StringPropertyWithLengthValidation'));
+    }
+
     private function buildCodeCreator($defaultClass)
     {
         return new CodeCreator($defaultClass, 'Elsevier\JSONSchemaPHPGenerator\Examples', $this->log);

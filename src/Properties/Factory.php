@@ -54,8 +54,9 @@ class Factory
             $this->log->debug('Created Float property ' . $name);
             return new FloatProperty($name);
         } elseif ($attributes->type === 'string' && !isset($attributes->enum)) {
+            $minLength = isset($attributes->minLength) ? $attributes->minLength : false;
             $this->log->debug('Created String property ' . $name);
-            return new StringProperty($name);
+            return new StringProperty($name, $minLength);
         } elseif ($attributes->type === 'boolean') {
             $this->log->debug('Created Boolean property ' . $name);
             return new BooleanProperty($name);
