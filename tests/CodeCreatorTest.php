@@ -579,7 +579,8 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
             "properties": {
                 "foo": {
                     "type": "string",
-                    "minLength": 1
+                    "minLength": 1,
+                    "maxLength": 15
                 }
             },
             "required": [

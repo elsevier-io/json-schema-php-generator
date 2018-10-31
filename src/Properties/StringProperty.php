@@ -37,6 +37,9 @@ class StringProperty extends TypedProperty
         if ($this->minLength !== false) {
             $value = "\$this->ensureMinimumLength($value)";
         }
+        if ($this->maxLength !== false) {
+            $value = "\$this->ensureMaximumLength($value)";
+        }
         $constructor->addBody("\$this->{$this->name} = {$value};");
         return $constructor;
     }
@@ -49,11 +52,23 @@ class StringProperty extends TypedProperty
         if ($this->minLength !== false) {
             $body = <<<BODY
                 if (mb_strlen(\$value) < {$this->minLength}) {
-                throw new InvalidValueException(\$value . ' is less than the minimum specified length of {$this->minLength}');
+                    throw new InvalidValueException(\$value . ' is less than the minimum specified length of {$this->minLength}');
                 }
                 return \$value;
 BODY;
             $class->addMethod('ensureMinimumLength')
+                ->setVisibility('private')
+                ->addBody($body)
+                ->addParameter('value');
+        }
+        if ($this->maxLength !== false) {
+            $body = <<<BODY
+                if (mb_strlen(\$value) > {$this->maxLength}) {
+                    throw new InvalidValueException(\$value . ' is more than the maximum specified length of {$this->maxLength}');
+                }
+                return \$value;
+BODY;
+            $class->addMethod('ensureMaximumLength')
                 ->setVisibility('private')
                 ->addBody($body)
                 ->addParameter('value');
