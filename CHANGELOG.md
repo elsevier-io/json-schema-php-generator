@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] - 2018-11-02
+### Added
+- Add support for minLength and maxLength properties for strings
+
 ## [0.10.0] - 2018-10-04
 ### Added
 - Add support for type that aren't required
