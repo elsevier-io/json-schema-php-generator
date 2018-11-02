@@ -32,7 +32,7 @@ class TypedProperty implements Property
      */
     public function addConstructorBody(Method $constructor)
     {
-        $constructor->addBody("\$this->{$this->name} = \${$this->name};");
+        $constructor->addBody($this->getCodeToAssignValue());
         return $constructor;
     }
 
@@ -100,9 +100,9 @@ CODE;
     public function addSetterTo(ClassType $class)
     {
         $class->addMethod('set' . ucfirst($this->name))
-            ->addComment('@param ' . $this->type . ' $value')
-            ->addBody("\$this->$this->name = \$value;")
-            ->addParameter('value');
+            ->addComment('@param ' . $this->type . ' $' . $this->name)
+            ->addBody($this->getCodeToAssignValue())
+            ->addParameter($this->name);
         return $class;
     }
 
@@ -112,5 +112,13 @@ CODE;
     public function addExtraMethodsTo(ClassType $class)
     {
         return $class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCodeToAssignValue()
+    {
+        return "\$this->{$this->name} = \${$this->name};";
     }
 }

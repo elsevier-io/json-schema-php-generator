@@ -18,11 +18,11 @@ class BooleanProperty implements \JsonSerializable
     }
 
     /**
-     * @param boolean $value
+     * @param boolean $bar
      */
-    public function setBar($value)
+    public function setBar($bar)
     {
-        $this->bar = $value;
+        $this->bar = $bar;
     }
 
     public function jsonSerialize()
