@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Fixed
+- Tidy up indentation on string length validation
+- Add @throws annotations
+
+## [0.11.1] - 2018-11-02
+### Fixed
+- Updated CHANGELOG
+
 ## [0.11.0] - 2018-11-02
 ### Added
 - Add support for minLength and maxLength properties for strings
