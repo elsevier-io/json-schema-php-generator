@@ -31,11 +31,11 @@ class MultipleOrderedProperties implements \JsonSerializable
 
 
     /**
-     * @param string $value
+     * @param string $delta
      */
-    public function setDelta($value)
+    public function setDelta($delta)
     {
-        $this->delta = $value;
+        $this->delta = (string)$delta;
     }
 
 

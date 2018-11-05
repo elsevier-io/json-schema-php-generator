@@ -11,7 +11,7 @@ class StringPropertyWithLengthValidationTest extends TestCase
     public function testRejectsStringLessThanMinLength()
     {
         try {
-            $object = new StringPropertyWithLengthValidation('');
+            $object = new StringPropertyWithLengthValidation('', 'string');
             assertThat(true, is(false));
         } catch (\Exception $e) {
             assertThat($e, is(anInstanceOf(InvalidValueException::class)));
@@ -21,7 +21,7 @@ class StringPropertyWithLengthValidationTest extends TestCase
     public function testRejectsStringMoreThanMaxLength()
     {
         try {
-            $object = new StringPropertyWithLengthValidation(str_repeat('a', 16));
+            $object = new StringPropertyWithLengthValidation(str_repeat('a', 16), 'string');
             assertThat(true, is(false));
         } catch (\Exception $e) {
             assertThat($e, is(anInstanceOf(InvalidValueException::class)));
@@ -30,11 +30,14 @@ class StringPropertyWithLengthValidationTest extends TestCase
 
     public function testAcceptsStringWithinLengthBounds()
     {
-        $object = new StringPropertyWithLengthValidation('bar');
+        $object = new StringPropertyWithLengthValidation('bar', 'string');
+        $object->setBar('alpha');
         $json = json_encode($object);
 
         $expected = '{
-            "foo": "bar"
+            "baz": "bar",
+            "foo": "string",
+            "bar": "alpha"
         }';
         assertThat($json, matchesJSONOutput($expected));
     }

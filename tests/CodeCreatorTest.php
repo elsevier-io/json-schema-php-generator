@@ -577,6 +577,16 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
     {
         $schema = json_decode('{
             "properties": {
+                "bar": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 100
+                },
+                "baz": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 10
+                },
                 "foo": {
                     "type": "string",
                     "minLength": 1,
@@ -584,6 +594,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
                 }
             },
             "required": [
+                "baz",
                 "foo"
             ]
         }');

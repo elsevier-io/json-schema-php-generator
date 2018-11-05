@@ -5,14 +5,30 @@ namespace Elsevier\JSONSchemaPHPGenerator\Examples;
 class StringPropertyWithLengthValidation implements \JsonSerializable
 {
     /** @var string */
+    private $bar;
+    /** @var string */
+    private $baz;
+    /** @var string */
     private $foo;
 
     /**
+     * @param string $baz
      * @param string $foo
+     * @throws InvalidValueException
      */
-    public function __construct($foo)
+    public function __construct($baz, $foo)
     {
+        $this->baz = $this->ensureMaximumLength($this->ensureMinimumLength((string)$baz));
         $this->foo = $this->ensureMaximumLength($this->ensureMinimumLength((string)$foo));
+    }
+
+    /**
+     * @param string $bar
+     * @throws InvalidValueException
+     */
+    public function setBar($bar)
+    {
+        $this->bar = $this->ensureMaximumLength($this->ensureMinimumLength((string)$bar));
     }
 
     private function ensureMinimumLength($value)
@@ -33,8 +49,13 @@ class StringPropertyWithLengthValidation implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return [
+        $values = [
+            'baz' => $this->baz,
             'foo' => $this->foo,
         ];
+        if ($this->bar) {
+            $values['bar'] = $this->bar;
+        }
+        return $values;
     }
 }

@@ -156,6 +156,7 @@ class CodeCreator
         } else {
             $propertyNamesInOrder = array_keys(get_object_vars($schema->properties));
         }
+        $constructorExceptions = [];
         foreach ($propertyNamesInOrder as $propertyName) {
             $propertyAttributes = $schema->properties->$propertyName;
             $property = $this->properties->create($propertyName, $propertyAttributes, $className, $this->defaultNamespace);
@@ -163,6 +164,7 @@ class CodeCreator
                 $constructor = $property->addConstructorBody($constructor);
                 $constructor = $property->addConstructorComment($constructor);
                 $constructor = $property->addParameterTo($constructor);
+                $constructorExceptions = $property->getConstructorException($constructorExceptions);
                 $class = $property->addTo($class);
                 $serializableRequiredProperties .= $property->serializingCode();
                 $classes = array_merge($classes, $property->extraClasses($this));
@@ -182,6 +184,10 @@ class CodeCreator
             $serializableMethodBody .= "return \$values;\n";
         } else {
             $serializableMethodBody = "return [\n" . $serializableRequiredProperties . "];";
+        }
+        $constructorExceptions = array_unique($constructorExceptions);
+        foreach ($constructorExceptions as $constructorException) {
+            $constructor->addComment("@throws $constructorException");
         }
         $class->addMethod('jsonSerialize')
             ->addBody($serializableMethodBody);
