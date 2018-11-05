@@ -113,6 +113,4 @@ BODY;
         }
         return $constructorExceptions;
     }
-
-
 }
