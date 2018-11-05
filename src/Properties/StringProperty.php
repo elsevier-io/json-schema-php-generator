@@ -16,6 +16,10 @@ class StringProperty extends TypedProperty
      * @var integer|false
      */
     private $maxLength;
+    /**
+     * @var boolean
+     */
+    private $hasConstraint;
 
     /**
      * @param string $name
@@ -27,6 +31,7 @@ class StringProperty extends TypedProperty
         parent::__construct($name, 'string');
         $this->minLength = $minLength;
         $this->maxLength = $maxLength;
+        $this->hasConstraint = ($this->minLength !== false || $this->maxLength !== false);
     }
 
     /**
@@ -76,7 +81,7 @@ BODY;
     public function extraClasses(CodeCreator $code)
     {
         $classes = [];
-        if ($this->minLength !== false || $this->maxLength !== false) {
+        if ($this->hasConstraint) {
             $classes['InvalidValueException'] = $code->createException('InvalidValueException');
         }
         return $classes;
@@ -87,7 +92,7 @@ BODY;
      */
     public function addSetterTo(ClassType $class)
     {
-        if ($this->minLength !== false || $this->maxLength !== false) {
+        if ($this->hasConstraint) {
             $class->addMethod('set' . ucfirst($this->name))
                 ->addComment('@param ' . $this->type . ' $' . $this->name)
                 ->addComment('@throws InvalidValueException')
@@ -108,7 +113,7 @@ BODY;
     protected function getCodeToAssignValue()
     {
         $value = "(string)\${$this->name}";
-        if ($this->minLength !== false || $this->maxLength !== false) {
+        if ($this->hasConstraint) {
             if ($this->minLength !== false) {
                 $value = "\$this->ensureMinimumLength($value)";
             }
@@ -121,7 +126,7 @@ BODY;
 
     public function getConstructorException(array $constructorExceptions)
     {
-        if ($this->minLength !== false || $this->maxLength !== false) {
+        if ($this->hasConstraint) {
             $constructorExceptions[] = 'InvalidValueException';
         }
         return $constructorExceptions;
