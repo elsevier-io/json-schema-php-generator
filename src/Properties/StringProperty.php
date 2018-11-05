@@ -2,6 +2,7 @@
 
 namespace Elsevier\JSONSchemaPHPGenerator\Properties;
 
+use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 
@@ -67,6 +68,18 @@ BODY;
                 ->addParameter('value');
         }
         return $class;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function extraClasses(CodeCreator $code)
+    {
+        $classes = [];
+        if ($this->minLength !== false || $this->maxLength !== false) {
+            $classes['InvalidValueException'] = $code->createException('InvalidValueException');
+        }
+        return $classes;
     }
 
     /**

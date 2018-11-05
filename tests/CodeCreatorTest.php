@@ -573,7 +573,7 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
         assertThat($code, hasClassThatMatchesTheExample('IBar'));
     }
 
-    public function testStringMinLength()
+    public function testStringLengthConstraints()
     {
         $schema = json_decode('{
             "properties": {
@@ -603,8 +603,9 @@ class CodeCreatorTest extends \PHPUnit\Framework\TestCase
 
         $code = $codeCreator->create($schema);
 
-        assertThat($code, arrayWithSize(atLeast(1)));
+        assertThat($code, arrayWithSize(atLeast(2)));
         assertThat($code, hasClassThatMatchesTheExample('StringPropertyWithLengthValidation'));
+        assertThat($code, hasClassThatMatchesTheExample('InvalidValueException'));
     }
 
     private function buildCodeCreator($defaultClass)
