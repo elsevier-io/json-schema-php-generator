@@ -31,18 +31,6 @@ class StringProperty extends TypedProperty
     /**
      * @inheritdoc
      */
-    public function addConstructorComment(Method $constructor)
-    {
-        $constructor = parent::addConstructorComment($constructor);
-        if ($this->minLength !== false || $this->maxLength !== false) {
-            $constructor->addComment("@throws InvalidValueException");
-        }
-        return $constructor;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function addConstructorBody(Method $constructor)
     {
         $constructor->addBody($this->getCodeToAssignValue());
@@ -117,4 +105,14 @@ BODY;
         }
         return "\$this->$this->name = $value;";
     }
+
+    public function getConstructorException(array $constructorExceptions)
+    {
+        if ($this->minLength !== false || $this->maxLength !== false) {
+            $constructorExceptions[] = 'InvalidValueException';
+        }
+        return $constructorExceptions;
+    }
+
+
 }

@@ -121,4 +121,12 @@ CODE;
     {
         return "\$this->{$this->name} = \${$this->name};";
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConstructorException(array $constructorExceptions)
+    {
+        return $constructorExceptions;
+    }
 }

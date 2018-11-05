@@ -59,4 +59,10 @@ interface Property
      * @return ClassType
      */
     public function addExtraMethodsTo(ClassType $class);
+
+    /**
+     * @param string[] $constructorExceptions
+     * @return string[]
+     */
+    public function getConstructorException(array $constructorExceptions);
 }

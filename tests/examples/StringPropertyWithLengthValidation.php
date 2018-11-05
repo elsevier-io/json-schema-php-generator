@@ -13,7 +13,6 @@ class StringPropertyWithLengthValidation implements \JsonSerializable
 
     /**
      * @param string $baz
-     * @throws InvalidValueException
      * @param string $foo
      * @throws InvalidValueException
      */

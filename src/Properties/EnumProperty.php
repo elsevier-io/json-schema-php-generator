@@ -133,4 +133,12 @@ CODE;
     {
         return $class;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getConstructorException(array $constructorExceptions)
+    {
+        return $constructorExceptions;
+    }
 }
