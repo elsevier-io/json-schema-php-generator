@@ -13,7 +13,7 @@
         "type": "package",
         "package": {
             "name": "json-schema/JSON-Schema-Test-Suite",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "url": "https://github.com/json-schema/JSON-Schema-Test-Suite",
                 "type": "git",
