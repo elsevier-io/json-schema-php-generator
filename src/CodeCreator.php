@@ -84,7 +84,7 @@ class CodeCreator
         $constantNames = [];
         foreach ($values as $value) {
             $constantName = $this->normalizeEnumConstantName($value);
-            $class->addConst($constantName, $value);
+            $class->addConstant($constantName, $value);
             $constantNames[] = $constantName;
         }
         $class->addProperty('value')
