@@ -48,7 +48,7 @@ class ArrayProperty extends TypedProperty
     public function addParameterTo(Method $constructor)
     {
         $constructor->addParameter($this->name)
-            ->setTypeHint('array');
+            ->setType('array');
         return $constructor;
     }
 
@@ -70,7 +70,7 @@ class ArrayProperty extends TypedProperty
             ->addComment("@param {$this->type} \$value")
             ->addBody("\$this->{$this->name} = \$this->{$this->filterMethodName}(\$value);")
             ->addParameter('value')
-            ->setTypeHint('array');
+            ->setType('array');
         return $class;
     }
 
@@ -89,7 +89,7 @@ return array_values(array_filter(\$array, function (\$item) {
 CODE
             )
             ->addParameter('array')
-            ->setTypeHint('array');
+            ->setType('array');
         return $class;
     }
 }

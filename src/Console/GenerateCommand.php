@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 use Elsevier\JSONSchemaPHPGenerator\Generator;
-use League\Flysystem\Adapter\Local;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\Filesystem;
 
 class GenerateCommand extends Command
@@ -46,11 +46,10 @@ class GenerateCommand extends Command
     {
         $outputDirPath = $input->getOption('outputDir');
         $output->writeln('Setting output dir to ' . realpath($outputDirPath));
-        $outputDirFiles = new Local($outputDirPath);
+        $outputDirFiles = new LocalFilesystemAdapter($outputDirPath);
         $outputDir = new Filesystem($outputDirFiles);
-
         $output->writeln('Deleting all files in output dir.');
-        $files = $outputDir->listContents();
+        $files = $outputDir->listContents('.');
         foreach ($files as $file) {
             $outputDir->delete($file['path']);
         }
@@ -64,7 +63,7 @@ class GenerateCommand extends Command
         $log->pushHandler(new StreamHandler('php://stdout', Logger::INFO));
         $codeCreator = new CodeCreator($defaultClass, $defaultNamespace, $log);
         $generator = new Generator($outputDir, $codeCreator, $this->schemaDraftFileLocation);
-        $localFiles = new Local('.');
+        $localFiles = new LocalFilesystemAdapter('.');
         $schemaDir = new Filesystem($localFiles);
 
         $schemaPath = $input->getArgument('schema');

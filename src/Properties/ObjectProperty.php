@@ -29,7 +29,7 @@ class ObjectProperty extends TypedProperty
     public function addParameterTo(Method $constructor)
     {
         $constructor->addParameter($this->name)
-            ->setTypeHint($this->namespace . '\\' . $this->type);
+            ->setType($this->namespace . '\\' . $this->type);
         return $constructor;
     }
 
@@ -42,7 +42,7 @@ class ObjectProperty extends TypedProperty
             ->addComment("@param {$this->type} \$value")
             ->addBody("\$this->$this->name = \$value;")
             ->addParameter('value')
-            ->setTypeHint($this->namespace . '\\' . $this->type);
+            ->setType($this->namespace . '\\' . $this->type);
         return $class;
     }
 }
