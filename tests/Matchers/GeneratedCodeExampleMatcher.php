@@ -4,7 +4,7 @@ namespace Elsevier\JSONSchemaPHPGenerator\Tests\Matchers;
 
 use Hamcrest\BaseMatcher;
 use Hamcrest\Description;
-use League\Flysystem\Adapter\Local;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\Filesystem;
 
 class GeneratedCodeExampleMatcher extends BaseMatcher
@@ -48,7 +48,7 @@ class GeneratedCodeExampleMatcher extends BaseMatcher
 
     private function getExample($exampleName)
     {
-        $localFiles = new Local(__DIR__ . '/../examples/');
+        $localFiles = new LocalFilesystemAdapter(__DIR__ . '/../examples/');
         $examples = new Filesystem($localFiles);
         $example = $this->removeWhiteSpace($examples->read($exampleName));
         return substr($example, 5);

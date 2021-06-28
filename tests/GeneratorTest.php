@@ -6,7 +6,7 @@ use Elsevier\JSONSchemaPHPGenerator\CodeCreator;
 use Elsevier\JSONSchemaPHPGenerator\Generator;
 use Elsevier\JSONSchemaPHPGenerator\InvalidJsonException;
 use Elsevier\JSONSchemaPHPGenerator\InvalidSchemaException;
-use League\Flysystem\Adapter\Local;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\Filesystem;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
@@ -32,7 +32,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
 
         $generator->generate('{}');
 
-        assertThat($fileSystem->listContents(), is([]));
+        assertThat($fileSystem->listContents('.')->toArray(), is([]));
     }
 
     public function testBasicSchemaCreatesOneClassFile()
@@ -48,7 +48,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
 
         $generator->generate($schema);
 
-        assertThat($fileSystem->has('FooBar.php'), is(true));
+        assertThat($fileSystem->fileExists('FooBar.php'), is(true));
     }
 
     public function testInvalidJsonThrowsException()
@@ -79,7 +79,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function createFilesystem($rootDir = '/tmp/outputDir/')
     {
-        $localFiles = new Local($rootDir);
+        $localFiles = new LocalFilesystemAdapter($rootDir);
         return new Filesystem($localFiles);
     }
 
@@ -89,7 +89,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
     public function cleanOutOutputDir()
     {
         $fileSystem = $this->createFilesystem();
-        $files = $fileSystem->listContents();
+        $files = $fileSystem->listContents('.');
         foreach ($files as $file) {
             $fileSystem->delete($file['path']);
         }

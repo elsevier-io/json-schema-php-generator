@@ -50,7 +50,7 @@ class EnumProperty implements Property
     public function addParameterTo(Method $constructor)
     {
         $constructor->addParameter($this->name)
-            ->setTypeHint($this->defaultNamespace . '\\' . $this->enumName);
+            ->setType($this->defaultNamespace . '\\' . $this->enumName);
         return $constructor;
     }
 
@@ -122,7 +122,7 @@ CODE;
             ->addComment("@param {$this->enumName} \$value")
             ->addBody("\$this->{$this->name} = \$value;")
             ->addParameter('value')
-            ->setTypeHint($this->defaultNamespace . '\\' . $this->enumName);
+            ->setType($this->defaultNamespace . '\\' . $this->enumName);
         return $class;
     }
 
